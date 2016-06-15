@@ -2,6 +2,7 @@ package io.pivotal.cf.nozzle.mapper;
 
 import io.pivotal.cf.nozzle.doppler.Envelope;
 import io.pivotal.cf.nozzle.doppler.EventType;
+import io.pivotal.cf.nozzle.doppler.WrappedEnvelope;
 import org.cloudfoundry.doppler.*;
 import org.junit.Test;
 
@@ -15,8 +16,9 @@ public class TextSerializerTest {
 	public void basicTextSerializer() {
 		TextSerializationMapper textSerializationMapper = new TextSerializationMapper();
 		Envelope<CounterEvent> counterEventEnvelope = sampleCounterEvent();
+		WrappedEnvelope wrappedEnvelope = new WrappedEnvelope(counterEventEnvelope);
 
-		String text = textSerializationMapper.serialize(counterEventEnvelope);
+		String text = textSerializationMapper.serialize(wrappedEnvelope);
 
 		assertThat(text).contains("eventType=\"CounterEvent\"");
 		assertThat(text).contains(",deployment=\"deployment\"");
@@ -33,7 +35,9 @@ public class TextSerializerTest {
 		TextSerializationMapper textSerializationMapper = new TextSerializationMapper();
 		Envelope<CounterEvent> counterEventEnvelope = sampleCounterEvent();
 
-		String text = textSerializationMapper.serialize(counterEventEnvelope);
+		WrappedEnvelope wrappedEnvelope = new WrappedEnvelope(counterEventEnvelope);
+
+		String text = textSerializationMapper.serialize(wrappedEnvelope);
 		assertThat(text).contains(",CounterEvent.delta=\"1\"");
 		assertThat(text).contains(",CounterEvent.name=\"sampleCounter\"");
 		assertThat(text).contains(",CounterEvent.total=\"12\"");
@@ -44,7 +48,9 @@ public class TextSerializerTest {
 		TextSerializationMapper textSerializationMapper = new TextSerializationMapper();
 		Envelope<HttpStart> httpStartEnvelope = sampleHttpStartEvent();
 
-		String text = textSerializationMapper.serialize(httpStartEnvelope);
+		WrappedEnvelope wrappedEnvelope = new WrappedEnvelope(httpStartEnvelope);
+
+		String text = textSerializationMapper.serialize(wrappedEnvelope);
 		assertThat(text).contains(",HttpStart.applicationId=\"00000000-0000-0000-0000-000000000000\"");
 		assertThat(text).contains(",HttpStart.instanceId=\"instanceId\"");
 		assertThat(text).contains(",HttpStart.instanceIndex=\"2\"");

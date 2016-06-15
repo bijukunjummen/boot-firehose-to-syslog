@@ -1,6 +1,7 @@
 package io.pivotal.cf.nozzle.mapper;
 
 import io.pivotal.cf.nozzle.doppler.Envelope;
+import io.pivotal.cf.nozzle.doppler.WrappedEnvelope;
 import org.cloudfoundry.doppler.Event;
 
 /**
@@ -8,6 +9,6 @@ import org.cloudfoundry.doppler.Event;
  */
 public interface EnvelopeSerializationMapper {
 
-	String serialize(Envelope<? extends Event> envelope);
+	String serialize(WrappedEnvelope<? extends Event> envelope);
 
 }

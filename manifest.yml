@@ -11,10 +11,10 @@ applications:
       cf_user: admin
       cf_password: admin
       cf_skipSslValidation: true
-      firehose_event_types: LogMessage, ValueMetric, ContainerMetric
-      firehose_text_format: SPLUNK
+      firehose_event_types: LogMessage, ValueMetric
+      firehose_text_format: JSON
       firehose_parallelism: 5
-      syslog_server: splunkserver
+      syslog_server: ec2-54-175-55-53.compute-1.amazonaws.com
       syslog_port: 9997
       syslog_connection_type: TCP
       JBP_CONFIG_SPRING_AUTO_RECONFIGURATION: '{enabled: false}'

@@ -2,6 +2,7 @@ package io.pivotal.cf.nozzle.mapper;
 
 import io.pivotal.cf.nozzle.doppler.Envelope;
 import io.pivotal.cf.nozzle.doppler.EventType;
+import io.pivotal.cf.nozzle.doppler.WrappedEnvelope;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cloudfoundry.doppler.*;
@@ -9,10 +10,7 @@ import org.cloudfoundry.doppler.Error;
 import reactor.core.tuple.Tuple;
 import reactor.core.tuple.Tuple2;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Supplier;
 
 public class TextSerializationMapper implements EnvelopeSerializationMapper {
@@ -21,27 +19,35 @@ public class TextSerializationMapper implements EnvelopeSerializationMapper {
 
 	public TextSerializationMapper() {
 		this.textSerializer = new TextSerializer();
-		this.textSerializer.setFieldMapping(Envelope.class, (Envelope envelope) -> {
+		this.textSerializer.setFieldMapping(WrappedEnvelope.class, (WrappedEnvelope envelope) -> {
 			List<Supplier<Tuple2<String, String>>> mappingList = new ArrayList<>();
 
 			mappingList.addAll(Arrays.asList(
-					() -> Tuple.of("eventType", Objects.toString(envelope.getEventType())),
-					() -> Tuple.of("deployment", envelope.getDeployment()),
-					() -> Tuple.of("origin", envelope.getOrigin()),
-					() -> Tuple.of("timestamp", Objects.toString(envelope.getTimestamp())),
-					() -> Tuple.of("job", envelope.getJob()),
-					() -> Tuple.of("index", envelope.getIndex()),
-					() -> Tuple.of("ip", envelope.getIp())
+					() -> Tuple.of("eventType", Objects.toString(envelope.getEnvelope().getEventType())),
+					() -> Tuple.of("deployment", envelope.getEnvelope().getDeployment()),
+					() -> Tuple.of("origin", envelope.getEnvelope().getOrigin()),
+					() -> Tuple.of("timestamp", Objects.toString(envelope.getEnvelope().getTimestamp())),
+					() -> Tuple.of("job", envelope.getEnvelope().getJob()),
+					() -> Tuple.of("index", envelope.getEnvelope().getIndex()),
+					() -> Tuple.of("ip", envelope.getEnvelope().getIp())
 			));
 
-			mappingList.addAll(addEventMappingDetails(envelope.getEventType(), envelope.getEvent()));
+			Map<String, String> additionalFields = envelope.getAdditionalFields();
+			if (additionalFields != null) {
+
+				for (Map.Entry<String, String> entry: additionalFields.entrySet()) {
+					mappingList.add(() -> Tuple.of(entry.getKey(), entry.getValue()));
+				}
+			}
+
+			mappingList.addAll(addEventMappingDetails(envelope.getEnvelope().getEventType(), envelope.getEnvelope().getEvent()));
 			return mappingList;
 		});
 
 	}
 
 	@Override
-	public String serialize(Envelope<? extends Event> envelope) {
+	public String serialize(WrappedEnvelope<? extends Event> envelope) {
 		return this.textSerializer.serialize(envelope);
 	}
 

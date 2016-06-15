@@ -4,7 +4,6 @@ import io.pivotal.cf.nozzle.doppler.Envelope;
 import io.pivotal.cf.nozzle.doppler.EventType;
 import io.pivotal.cf.nozzle.mapper.EnvelopeSerializationMapper;
 import io.pivotal.cf.nozzle.props.FirehoseProperties;
-import io.pivotal.cf.nozzle.props.SyslogProperties;
 import io.pivotal.cf.nozzle.syslog.SyslogSender;
 import org.cloudfoundry.doppler.Event;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,16 +21,19 @@ public class FirehoseToSyslogConnector {
 	private final SyslogSender syslogSender;
 	private final FirehoseProperties firehoseProperties;
 	private final EnvelopeSerializationMapper envelopeMapper;
+	private final ApplicationNameEnhancer applicationNameEnhancer;
 
 	@Autowired
 	public FirehoseToSyslogConnector(FirehoseObserver firehoseObserver,
 									 SyslogSender syslogSender,
 									 FirehoseProperties firehoseProperties,
-									 EnvelopeSerializationMapper envelopeMapper) {
+									 EnvelopeSerializationMapper envelopeMapper,
+									 ApplicationNameEnhancer applicationNameEnhancer) {
 		this.firehoseObserver = firehoseObserver;
 		this.syslogSender = syslogSender;
 		this.firehoseProperties = firehoseProperties;
 		this.envelopeMapper = envelopeMapper;
+		this.applicationNameEnhancer = applicationNameEnhancer;
 	}
 
 	public void connect() {
@@ -41,8 +43,9 @@ public class FirehoseToSyslogConnector {
 
 		parallelFlux
 				.filter(envelope -> isTargetEventType(firehoseProperties, envelope.getEventType()))
-				.subscribe(envelope -> {
-					syslogSender.sendMessage(this.envelopeMapper.serialize(envelope));
+				.map(envelope -> applicationNameEnhancer.enhanceWithApplicationName(envelope))
+				.subscribe(wrappedEnvelope -> {
+					syslogSender.sendMessage(this.envelopeMapper.serialize(wrappedEnvelope));
 				});
 	}
 

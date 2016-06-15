@@ -2,6 +2,7 @@ package io.pivotal.cf.nozzle.doppler;
 
 import org.cloudfoundry.doppler.Event;
 
+import java.util.Map;
 import java.util.Objects;
 
 public final class Envelope<T extends Event> {
@@ -13,6 +14,7 @@ public final class Envelope<T extends Event> {
 	private final String index;
 	private final String ip;
 	private final T event;
+
 
 	private Envelope(Envelope.Builder<T> builder) {
 		this.origin = builder.origin;
@@ -73,7 +75,6 @@ public final class Envelope<T extends Event> {
 	public String getIp() {
 		return ip;
 	}
-
 
 	/**
 	 * Convenience method to be able to retrieve the event subtype without the user
@@ -223,7 +224,7 @@ public final class Envelope<T extends Event> {
 		 * @return {@code this} builder for use in a chained invocation
 		 */
 		public final Builder<T> timestamp(Long timestamp) {
-			this.timestamp = Objects.requireNonNull(timestamp, "timestamp");
+			this.timestamp = timestamp;
 			return this;
 		}
 

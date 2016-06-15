@@ -38,8 +38,9 @@ dependencies {
 	compile("io.projectreactor:reactor-core:$reactorVersion")
 	compile("io.projectreactor:reactor-netty:$reactorVersion")
 	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.4'
+	compile("com.google.guava:guava:19.0")
 	compile name: 'syslog-java-client-1.0.8'
-	testCompile('org.springframework.boot:spring-boot-starter-test') 
+	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile('org.assertj:assertj-core:3.4.1')
 }
 

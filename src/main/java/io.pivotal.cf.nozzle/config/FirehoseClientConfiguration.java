@@ -45,7 +45,7 @@ public class FirehoseClientConfiguration {
 			FirehoseProperties firehoseProperties, ObjectMapper objectMapper) {
 		switch(firehoseProperties.getTextFormat()) {
 			case JSON: return jsonSerializer(objectMapper);
-			case SPLUNK: return textSerializationMapper();
+			case TEXT: return textSerializationMapper();
 		}
 
 		return textSerializationMapper();

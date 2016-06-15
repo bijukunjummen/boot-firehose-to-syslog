@@ -1,4 +1,5 @@
-This is a Cloud Foundry Firehose Nozzle written using  https://github.com/cloudfoundry/cf-java-client[CF-Java-Client] and Spring Boot
+This is a Cloud Foundry Firehose Nozzle written using https://github.com/cloudfoundry/cf-java-client[CF-Java-Client] and Spring Boot. This project is heavily inspired by
+https://github.com/cloudfoundry-community/firehose-to-syslog[go based firehose-to-syslog] nozzle and should be completely feature compatible with that project including being able to enhance log details with information about application name.
 
 == Developing Locally
 

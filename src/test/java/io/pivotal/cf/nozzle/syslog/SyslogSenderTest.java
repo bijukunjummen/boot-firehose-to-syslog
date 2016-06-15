@@ -4,7 +4,6 @@ import io.pivotal.cf.nozzle.props.SyslogConnectionType;
 import io.pivotal.cf.nozzle.props.SyslogProperties;
 import org.junit.Test;
 
-import static org.assertj.core.api.Assertions.*;
 
 public class SyslogSenderTest {
 

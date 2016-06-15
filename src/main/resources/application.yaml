@@ -5,8 +5,8 @@ cf:
   skipSslValidation: true
 
 firehose:
-  eventTypes: LogMessage
-  textFormat: SPLUNK
+#  eventTypes: LogMessage
+  textFormat: TEXT
   parallelism: 5
 
 #syslog:
