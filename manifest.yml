@@ -11,10 +11,10 @@ applications:
       cf_user: admin
       cf_password: admin
       cf_skipSslValidation: true
-      firehose_eventTypes: LogMessage, ValueMetric, ContainerMetric
-      firehose_textFormat: SPLUNK
+      firehose_event_types: LogMessage, ValueMetric, ContainerMetric
+      firehose_text_format: SPLUNK
       firehose_parallelism: 5
-      syslog_server: asyslogserver
+      syslog_server: splunkserver
       syslog_port: 9997
-      syslog_connectionType: TCP
+      syslog_connection_type: TCP
       JBP_CONFIG_SPRING_AUTO_RECONFIGURATION: '{enabled: false}'

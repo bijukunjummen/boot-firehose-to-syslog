@@ -30,18 +30,25 @@ If you have a local PCF Dev available you should see logs being printed to the c
       cf_host: api.local.pcfdev.io
       cf_user: admin
       cf_password: admin
-      cf_skipSslValidation: true
-      firehose_eventTypes: LogMessage, ValueMetric, ContainerMetric
-      firehose_textFormat: SPLUNK
+      cf_skip_ssl_validation: true
+      firehose_event_types: LogMessage, ValueMetric, ContainerMetric
+      firehose_text_format: SPLUNK
       firehose_parallelism: 5
       syslog_server: asyslogserver
       syslog_port: 9997
-      syslog_connectionType: TCP
+      syslog_connection_type: TCP
 ----
 
 The text format can be set to SPLUNK or JSON, the eventTypes to HttpStart, HttpStop, HttpStartStop, LogMessage, ValueMetric,  CounterEvent,  Error, ContainerMetric
 
 Metrics can be sent over both TCP/UDP. If the connectionType is set to "DEBUG" then the logs will simply be printed to the console which is the default mode.
+
+* Push the app once you have a working set of environment variables in the manifest file:
+[source]
+----
+cf push
+----
+
 
 
 
