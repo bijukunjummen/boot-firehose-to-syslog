@@ -1,0 +1,20 @@
+---
+applications:
+  - name: boot-firehose-to-syslog
+    path: build/libs/boot-firehose-to-syslog-1.0.0.jar
+    memory: 512M
+    no-route: true
+    env:
+      JAVA_OPTS: -Djava.security.egd=file:/dev/./urandom
+      SPRING_PROFILES_ACTIVE: cloud
+      cf_host: api.local.pcfdev.io
+      cf_user: admin
+      cf_password: admin
+      cf_skipSslValidation: true
+      firehose_eventTypes: LogMessage, ValueMetric, ContainerMetric
+      firehose_textFormat: SPLUNK
+      firehose_parallelism: 5
+      syslog_server: asyslogserver
+      syslog_port: 9997
+      syslog_connectionType: TCP
+      JBP_CONFIG_SPRING_AUTO_RECONFIGURATION: '{enabled: false}'

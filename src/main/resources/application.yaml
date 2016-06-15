@@ -1,0 +1,29 @@
+cf:
+  host: api.local.pcfdev.io
+  user: admin
+  password: admin
+  skipSslValidation: true
+
+firehose:
+  eventTypes: LogMessage
+  textFormat: SPLUNK
+  parallelism: 5
+
+#syslog:
+#  connectionType: TCP # OR UDP OR DEBUG
+#  server: splunkServer
+#  port: 9997
+
+
+#    HttpStart,
+#    HttpStop,
+#    HttpStartStop,
+#    LogMessage,
+#    ValueMetric,
+#    CounterEvent,
+#    Error,
+#    ContainerMetric
+
+logging:
+  level:
+    io.pivotal.cf.nozzle.syslog.DebuggingSyslogSender: DEBUG
