@@ -11,7 +11,7 @@ applications:
       cf_user: admin
       cf_password: admin
       cf_skip_ssl_validation: true
-      firehose_event_types: LogMessage, ValueMetric, HttpStart, HttpStop, HttpStartStop
+      firehose_event_types: LogMessage
       firehose_text_format: JSON
       firehose_parallelism: 5
       firehose_subscription_id: boot-firehose-to-syslog
@@ -20,11 +20,4 @@ applications:
       syslog_connection_type: TCP
       JBP_CONFIG_SPRING_AUTO_RECONFIGURATION: '{enabled: false}'
 
-#    HttpStart,
-#    HttpStop,
-#    HttpStartStop,
-#    LogMessage,
-#    ValueMetric,
-#    CounterEvent,
-#    Error,
-#    ContainerMetric
+#    HttpStart, HttpStop, HttpStartStop, LogMessage, ValueMetric, CounterEvent, Error, ContainerMetric
