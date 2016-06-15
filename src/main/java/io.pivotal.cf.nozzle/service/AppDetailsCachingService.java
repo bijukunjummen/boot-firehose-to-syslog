@@ -43,7 +43,7 @@ public class AppDetailsCachingService {
 	public String getApplicationName(String applicationId) {
 		try {
 			return this.applicationNameCache.get(applicationId);
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			return "";
 		}
 	}

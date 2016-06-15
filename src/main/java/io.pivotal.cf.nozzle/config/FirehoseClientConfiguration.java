@@ -7,7 +7,6 @@ import io.pivotal.cf.nozzle.mapper.JsonSerializer;
 import io.pivotal.cf.nozzle.mapper.TextSerializationMapper;
 import io.pivotal.cf.nozzle.props.CfProperties;
 import io.pivotal.cf.nozzle.props.FirehoseProperties;
-import io.pivotal.cf.nozzle.service.FirehoseObserver;
 import org.cloudfoundry.spring.client.SpringCloudFoundryClient;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -35,17 +34,13 @@ public class FirehoseClientConfiguration {
 	}
 
 	@Bean
-	public FirehoseObserver firehoseObserver(WrappedDopplerClient dopplerClient) {
-		return
-				new FirehoseObserver(dopplerClient);
-	}
-
-	@Bean
 	public EnvelopeSerializationMapper serializationMapper(
 			FirehoseProperties firehoseProperties, ObjectMapper objectMapper) {
-		switch(firehoseProperties.getTextFormat()) {
-			case JSON: return jsonSerializer(objectMapper);
-			case TEXT: return textSerializationMapper();
+		switch (firehoseProperties.getTextFormat()) {
+			case JSON:
+				return jsonSerializer(objectMapper);
+			case TEXT:
+				return textSerializationMapper();
 		}
 
 		return textSerializationMapper();

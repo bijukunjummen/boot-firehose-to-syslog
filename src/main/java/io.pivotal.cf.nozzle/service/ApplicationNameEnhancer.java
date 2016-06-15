@@ -48,7 +48,7 @@ public class ApplicationNameEnhancer {
 	}
 
 	public WrappedEnvelope<? extends Event> enhanceWithApplicationName(Envelope<? extends Event> envelope, String applicationId) {
-		if (applicationId!=null) {
+		if (applicationId != null) {
 			String applicationName = this.appDetailsCachingService.getApplicationName(Objects.toString(applicationId));
 			if (applicationName != null) {
 				Map<String, String> fields = new HashMap<>();
@@ -60,7 +60,7 @@ public class ApplicationNameEnhancer {
 	}
 
 	public WrappedEnvelope<? extends Event> enhanceWithApplicationNameUUID(Envelope<? extends Event> envelope, UUID applicationId) {
-		if (applicationId!=null) {
+		if (applicationId != null) {
 			return enhanceWithApplicationName(envelope, applicationId.toString());
 		}
 		return new WrappedEnvelope<>(envelope);

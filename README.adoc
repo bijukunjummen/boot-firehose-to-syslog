@@ -5,42 +5,51 @@ https://github.com/cloudfoundry-community/firehose-to-syslog[go based firehose-t
 
 * Clone this project
 [source]
-....
+----
 git clone https://github.com/bijukunjummen/boot-firehose-to-syslog
-....
+----
 
 * Build it locally
 [source]
-....
+----
 ./gradlew clean build
-....
+----
 
 * Run it locally
 [source]
-....
+----
 ./gradlew bootRun
-....
-
+----
 If you have a local PCF Dev available you should see logs being printed to the console at this point.
 
 == Deploying the Nozzle
 
-* Specify the parameters to Splunk using the manifest file or by setting the environment variables:
+* Get the latest version of the release available https://github.com/bijukunjummen/boot-firehose-to-syslog/releases[here]
+OR build a release zip using
 [source]
 ----
-      cf_host: api.local.pcfdev.io
-      cf_user: admin
-      cf_password: admin
-      cf_skip_ssl_validation: true
-      firehose_event_types: LogMessage, ValueMetric, ContainerMetric
-      firehose_text_format: SPLUNK
-      firehose_parallelism: 5
-      syslog_server: asyslogserver
-      syslog_port: 9997
-      syslog_connection_type: TCP
+./gradlew buildZip
 ----
 
-The text format can be set to SPLUNK or JSON, the eventTypes to HttpStart, HttpStop, HttpStartStop, LogMessage, ValueMetric,  CounterEvent,  Error, ContainerMetric
+* Unzip the zip file and there should be a manifest and a jar file.
+
+* Specify the parameters in manifest.yml to connect to firehose and to the syslog sink :
+[source]
+----
+cf_host: api.local.pcfdev.io
+cf_user: admin
+cf_password: admin
+cf_skip_ssl_validation: true
+firehose_event_types: LogMessage, ValueMetric, ContainerMetric
+firehose_text_format: TEXT
+firehose_parallelism: 5
+firehose_subscription_id: boot-firehose-to-syslog
+syslog_server: asyslogserver
+syslog_port: 9997
+syslog_connection_type: TCP
+----
+
+The text format can be set to TEXT or JSON, the eventTypes to HttpStart, HttpStop, HttpStartStop, LogMessage, ValueMetric,  CounterEvent,  Error, ContainerMetric
 
 Metrics can be sent over both TCP/UDP. If the connectionType is set to "DEBUG" then the logs will simply be printed to the console which is the default mode.
 

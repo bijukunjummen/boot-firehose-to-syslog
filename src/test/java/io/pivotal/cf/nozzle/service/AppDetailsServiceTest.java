@@ -17,15 +17,34 @@ public class AppDetailsServiceTest {
 	public void retrieveAppDetails() {
 
 		CloudFoundryClient cfClient = mock(CloudFoundryClient.class);
-		ApplicationsV2 mockApplicationsV3 = mock(ApplicationsV2.class);
-		when(cfClient.applicationsV2()).thenReturn(mockApplicationsV3);
+		ApplicationsV2 mockApplicationsV2 = mock(ApplicationsV2.class);
+		when(cfClient.applicationsV2()).thenReturn(mockApplicationsV2);
 		GetApplicationResponse getAppResponse = GetApplicationResponse.builder()
 				.entity(ApplicationEntity.builder()
 						.name("testApp")
 						.build())
 				.build();
-		when(mockApplicationsV3.get(any(GetApplicationRequest.class))).thenReturn(Mono.just(getAppResponse));
+		when(mockApplicationsV2.get(any(GetApplicationRequest.class))).thenReturn(Mono.just(getAppResponse));
 		AppDetailsService appDetailsService = new CfAppDetailsService(cfClient);
 		assertThat(appDetailsService.getApplicationName("testid").block()).isEqualTo("testApp");
 	}
+
+	@Test
+	public void retrieveAppDetailsWithException() {
+
+		CloudFoundryClient cfClient = mock(CloudFoundryClient.class);
+		ApplicationsV2 mockApplicationsV2 = mock(ApplicationsV2.class);
+		when(cfClient.applicationsV2()).thenReturn(mockApplicationsV2);
+		GetApplicationResponse getAppResponse = GetApplicationResponse.builder()
+				.entity(ApplicationEntity.builder()
+						.name("testApp")
+						.build())
+				.build();
+		Throwable anException = new RuntimeException("an explicit exception");
+		when(mockApplicationsV2.get(any(GetApplicationRequest.class)))
+				.thenReturn(Mono.error(anException));
+		AppDetailsService appDetailsService = new CfAppDetailsService(cfClient);
+		assertThat(appDetailsService.getApplicationName("testid").block()).isEqualTo("");
+	}
+
 }

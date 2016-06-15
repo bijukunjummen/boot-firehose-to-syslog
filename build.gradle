@@ -12,7 +12,9 @@ buildscript {
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
-apply plugin: 'spring-boot' 
+apply plugin: 'spring-boot'
+apply plugin: "jacoco"
+
 
 jar {
 	baseName = 'boot-firehose-to-syslog'
@@ -44,6 +46,26 @@ dependencies {
 	testCompile('org.assertj:assertj-core:3.4.1')
 }
 
+jacocoTestReport {
+	reports {
+		xml.enabled false
+		csv.enabled false
+		html.destination "${buildDir}/jacocoHtml"
+	}
+}
+
+task buildZip(type: Zip) {
+	dependsOn build
+	copy {
+		from 'gradle/manifest-sample.yml'
+		into "build/libs/"
+	}
+	file("build/libs/manifest-sample.yml").renameTo(file("build/libs/manifest.yml"))
+	baseName = jar.baseName + "-" + jar.version
+	from(jar.archivePath)
+	from("build/libs/manifest.yml")
+	destinationDir project.rootDir
+}
 
 eclipse {
 	classpath {

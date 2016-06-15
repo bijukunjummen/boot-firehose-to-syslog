@@ -13,6 +13,8 @@ public class FirehoseProperties {
 	private int parallelism = 2;
 	private TextFormat textFormat;
 
+	private String subscriptionId;
+
 	public List<EventType> getEventTypes() {
 		return eventTypes;
 	}
@@ -35,5 +37,13 @@ public class FirehoseProperties {
 
 	public void setTextFormat(TextFormat textFormat) {
 		this.textFormat = textFormat;
+	}
+
+	public String getSubscriptionId() {
+		return subscriptionId;
+	}
+
+	public void setSubscriptionId(String subscriptionId) {
+		this.subscriptionId = subscriptionId;
 	}
 }

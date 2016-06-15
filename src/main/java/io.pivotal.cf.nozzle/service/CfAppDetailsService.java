@@ -28,6 +28,8 @@ public class CfAppDetailsService implements AppDetailsService {
 				builder()
 				.applicationId(applicationId).build());
 
-		return responseMono.map(appResponse -> appResponse.getEntity().getName()).defaultIfEmpty("");
+		return responseMono
+				.map(appResponse -> appResponse.getEntity().getName())
+				.otherwiseReturn("").defaultIfEmpty("");
 	}
 }
