@@ -57,7 +57,7 @@ public class CfAppDetailsService implements AppDetailsService {
 					String appName = tup3.getT1().getEntity().getName();
 					String spaceName = tup3.getT2().getEntity().getName();
 					String orgName = tup3.getT3().getEntity().getName();
-					return new AppDetail(appName, spaceName, orgName);
+					return new AppDetail(appName, orgName, spaceName);
 				})
 				.otherwiseReturn(new AppDetail("", "", ""));
 	}

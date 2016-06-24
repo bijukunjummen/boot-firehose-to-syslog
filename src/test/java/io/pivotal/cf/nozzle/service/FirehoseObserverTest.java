@@ -18,7 +18,7 @@ public class FirehoseObserverTest {
 	@Test
 	public void testFirehoseObserver() {
 		NettyDopplerClient nettyDopplerClient = mock(NettyDopplerClient.class);
-		when(nettyDopplerClient.firehose(any(FirehoseRequest.class)))
+		when(nettyDopplerClient.firehose())
 				.thenReturn(Flux.just(sampleEnvelope()));
 		FirehoseObserver firehoseObserver = new FirehoseObserver(nettyDopplerClient, new FirehoseProperties());
 		Flux<Envelope<? extends Event>> publisher = firehoseObserver.observeFirehose(0);
@@ -29,7 +29,7 @@ public class FirehoseObserverTest {
 	//retry count should exceed the limits..
 	public void testFirehoseObserverWithAllErrors() throws Exception {
 		NettyDopplerClient nettyDopplerClient = mock(NettyDopplerClient.class);
-		when(nettyDopplerClient.firehose(any(FirehoseRequest.class)))
+		when(nettyDopplerClient.firehose())
 				.thenReturn(Flux.error(new RuntimeException("test")));
 		FirehoseObserver firehoseObserver = new FirehoseObserver(nettyDopplerClient, new FirehoseProperties());
 		Flux<Envelope<? extends Event>> publisher = firehoseObserver.observeFirehose(0);
@@ -41,7 +41,7 @@ public class FirehoseObserverTest {
 	@Test
 	public void testFirehoseObserverWithFewErrors() throws Exception {
 		NettyDopplerClient nettyDopplerClient = mock(NettyDopplerClient.class);
-		when(nettyDopplerClient.firehose(any(FirehoseRequest.class)))
+		when(nettyDopplerClient.firehose())
 				.thenReturn(Flux.error(new RuntimeException("test")))
 				.thenReturn(Flux.just(sampleEnvelope()));
 		FirehoseObserver firehoseObserver = new FirehoseObserver(nettyDopplerClient, new FirehoseProperties());

@@ -1,7 +1,7 @@
 ---
 applications:
   - name: boot-firehose-to-syslog
-    path: boot-firehose-to-syslog-1.0.0.jar
+    path: boot-firehose-to-syslog-1.1.0.jar
     memory: 512M
     no-route: true
     env:
