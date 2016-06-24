@@ -1,7 +1,7 @@
 package io.pivotal.cf.nozzle.service;
 
 import io.pivotal.cf.nozzle.doppler.Envelope;
-import io.pivotal.cf.nozzle.doppler.WrappedDopplerClient;
+import io.pivotal.cf.nozzle.doppler.NettyDopplerClient;
 import io.pivotal.cf.nozzle.props.FirehoseProperties;
 import org.cloudfoundry.doppler.Event;
 import org.cloudfoundry.doppler.FirehoseRequest;
@@ -17,10 +17,10 @@ public class FirehoseObserverTest {
 
 	@Test
 	public void testFirehoseObserver() {
-		WrappedDopplerClient wrappedDopplerClient = mock(WrappedDopplerClient.class);
-		when(wrappedDopplerClient.firehose(any(FirehoseRequest.class)))
+		NettyDopplerClient nettyDopplerClient = mock(NettyDopplerClient.class);
+		when(nettyDopplerClient.firehose(any(FirehoseRequest.class)))
 				.thenReturn(Flux.just(sampleEnvelope()));
-		FirehoseObserver firehoseObserver = new FirehoseObserver(wrappedDopplerClient, new FirehoseProperties());
+		FirehoseObserver firehoseObserver = new FirehoseObserver(nettyDopplerClient, new FirehoseProperties());
 		Flux<Envelope<? extends Event>> publisher = firehoseObserver.observeFirehose(0);
 		TestSubscriber.subscribe(publisher).await().assertValues(sampleEnvelope());
 	}
@@ -28,10 +28,10 @@ public class FirehoseObserverTest {
 	@Test(expected = RuntimeException.class)
 	//retry count should exceed the limits..
 	public void testFirehoseObserverWithAllErrors() throws Exception {
-		WrappedDopplerClient wrappedDopplerClient = mock(WrappedDopplerClient.class);
-		when(wrappedDopplerClient.firehose(any(FirehoseRequest.class)))
+		NettyDopplerClient nettyDopplerClient = mock(NettyDopplerClient.class);
+		when(nettyDopplerClient.firehose(any(FirehoseRequest.class)))
 				.thenReturn(Flux.error(new RuntimeException("test")));
-		FirehoseObserver firehoseObserver = new FirehoseObserver(wrappedDopplerClient, new FirehoseProperties());
+		FirehoseObserver firehoseObserver = new FirehoseObserver(nettyDopplerClient, new FirehoseProperties());
 		Flux<Envelope<? extends Event>> publisher = firehoseObserver.observeFirehose(0);
 		CountDownLatch cl = new CountDownLatch(1);
 		publisher.subscribe(e -> e.getEvent(), t -> {throw new RuntimeException(t);}, () -> cl.countDown() );
@@ -40,11 +40,11 @@ public class FirehoseObserverTest {
 
 	@Test
 	public void testFirehoseObserverWithFewErrors() throws Exception {
-		WrappedDopplerClient wrappedDopplerClient = mock(WrappedDopplerClient.class);
-		when(wrappedDopplerClient.firehose(any(FirehoseRequest.class)))
+		NettyDopplerClient nettyDopplerClient = mock(NettyDopplerClient.class);
+		when(nettyDopplerClient.firehose(any(FirehoseRequest.class)))
 				.thenReturn(Flux.error(new RuntimeException("test")))
 				.thenReturn(Flux.just(sampleEnvelope()));
-		FirehoseObserver firehoseObserver = new FirehoseObserver(wrappedDopplerClient, new FirehoseProperties());
+		FirehoseObserver firehoseObserver = new FirehoseObserver(nettyDopplerClient, new FirehoseProperties());
 		Flux<Envelope<? extends Event>> publisher = firehoseObserver.observeFirehose(0);
 		CountDownLatch cl = new CountDownLatch(1);
 		publisher.subscribe(e -> e.getEvent(), t -> {throw new RuntimeException(t);}, () -> cl.countDown() );

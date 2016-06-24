@@ -1,6 +1,5 @@
 package io.pivotal.cf.nozzle;
 
-import io.pivotal.cf.nozzle.service.FirehoseObserver;
 import io.pivotal.cf.nozzle.service.FirehoseToSyslogConnector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;

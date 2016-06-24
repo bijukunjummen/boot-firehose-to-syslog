@@ -3,6 +3,7 @@ package io.pivotal.cf.nozzle.service;
 import io.pivotal.cf.nozzle.doppler.Envelope;
 import io.pivotal.cf.nozzle.doppler.EventType;
 import io.pivotal.cf.nozzle.doppler.WrappedEnvelope;
+import io.pivotal.cf.nozzle.model.AppDetail;
 import org.cloudfoundry.doppler.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,10 +50,12 @@ public class ApplicationNameEnhancer {
 
 	public WrappedEnvelope<? extends Event> enhanceWithApplicationName(Envelope<? extends Event> envelope, String applicationId) {
 		if (applicationId != null) {
-			String applicationName = this.appDetailsCachingService.getApplicationName(Objects.toString(applicationId));
-			if (applicationName != null) {
+			AppDetail appDetail = this.appDetailsCachingService.getApplicationDetail(Objects.toString(applicationId));
+			if (appDetail != null) {
 				Map<String, String> fields = new HashMap<>();
-				fields.put("applicationName", applicationName);
+				fields.put("applicationName", appDetail.getApplicationName());
+				fields.put("org", appDetail.getOrg());
+				fields.put("space", appDetail.getSpace());
 				return new WrappedEnvelope<>(envelope, fields);
 			}
 		}

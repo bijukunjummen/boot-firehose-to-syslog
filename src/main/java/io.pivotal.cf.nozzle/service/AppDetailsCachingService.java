@@ -4,12 +4,12 @@ package io.pivotal.cf.nozzle.service;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import io.pivotal.cf.nozzle.model.AppDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Responsible for caching the application name
@@ -20,7 +20,7 @@ import java.util.concurrent.ExecutionException;
 public class AppDetailsCachingService {
 
 	private AppDetailsService delegatedService;
-	private LoadingCache<String, String> applicationNameCache;
+	private LoadingCache<String, AppDetail> applicationNameCache;
 
 	private final Integer MAX_CACHE_SIZE = 2000;
 	private final Integer DEFAULT_TIMEOUT = 2000;
@@ -31,20 +31,20 @@ public class AppDetailsCachingService {
 		this.applicationNameCache = CacheBuilder.newBuilder()
 				.maximumSize(MAX_CACHE_SIZE)
 				.build(
-						new CacheLoader<String, String>() {
-							public String load(String applicationId) {
+						new CacheLoader<String, AppDetail>() {
+							public AppDetail load(String applicationId) {
 								return AppDetailsCachingService.this.delegatedService
-										.getApplicationName(applicationId)
+										.getApplicationDetail(applicationId)
 										.block(Duration.of(DEFAULT_TIMEOUT, ChronoUnit.MILLIS));
 							}
 						});
 	}
 
-	public String getApplicationName(String applicationId) {
+	public AppDetail getApplicationDetail(String applicationId) {
 		try {
 			return this.applicationNameCache.get(applicationId);
 		} catch (Exception e) {
-			return "";
+			return new AppDetail("", "", "");
 		}
 	}
 }

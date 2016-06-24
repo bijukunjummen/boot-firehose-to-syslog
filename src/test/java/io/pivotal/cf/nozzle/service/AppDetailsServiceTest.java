@@ -26,7 +26,7 @@ public class AppDetailsServiceTest {
 				.build();
 		when(mockApplicationsV2.get(any(GetApplicationRequest.class))).thenReturn(Mono.just(getAppResponse));
 		AppDetailsService appDetailsService = new CfAppDetailsService(cfClient);
-		assertThat(appDetailsService.getApplicationName("testid").block()).isEqualTo("testApp");
+		assertThat(appDetailsService.getApplicationDetail("testid").block()).isEqualTo("testApp");
 	}
 
 	@Test
@@ -44,7 +44,7 @@ public class AppDetailsServiceTest {
 		when(mockApplicationsV2.get(any(GetApplicationRequest.class)))
 				.thenReturn(Mono.error(anException));
 		AppDetailsService appDetailsService = new CfAppDetailsService(cfClient);
-		assertThat(appDetailsService.getApplicationName("testid").block()).isEqualTo("");
+		assertThat(appDetailsService.getApplicationDetail("testid").block()).isEqualTo("");
 	}
 
 }

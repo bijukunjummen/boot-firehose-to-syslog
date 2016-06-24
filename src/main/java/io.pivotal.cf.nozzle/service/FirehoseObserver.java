@@ -1,25 +1,20 @@
 package io.pivotal.cf.nozzle.service;
 
 import io.pivotal.cf.nozzle.doppler.Envelope;
-import io.pivotal.cf.nozzle.doppler.WrappedDopplerClient;
+import io.pivotal.cf.nozzle.doppler.FirehoseClient;
 import io.pivotal.cf.nozzle.props.FirehoseProperties;
 import org.cloudfoundry.doppler.Event;
-import org.cloudfoundry.doppler.FirehoseRequest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
 import java.util.UUID;
 
-@Service
 public class FirehoseObserver {
 
-	private final WrappedDopplerClient dopplerClient;
+	private final FirehoseClient firehoseClient;
 	private final FirehoseProperties firehoseProperties;
 
-	@Autowired
-	public FirehoseObserver(WrappedDopplerClient wrappedDopplerClient, FirehoseProperties firehoseProperties) {
-		this.dopplerClient = wrappedDopplerClient;
+	public FirehoseObserver(FirehoseClient firehoseClient, FirehoseProperties firehoseProperties) {
+		this.firehoseClient = firehoseClient;
 		this.firehoseProperties = firehoseProperties;
 	}
 
@@ -33,12 +28,7 @@ public class FirehoseObserver {
 				? firehoseProperties.getSubscriptionId()
 				: UUID.randomUUID().toString();
 
-		Flux<Envelope<? extends Event>> cfEvents = this.dopplerClient.firehose(
-				FirehoseRequest
-						.builder()
-						.subscriptionId(subscriptionId)
-						.build()
-		);
+		Flux<Envelope<? extends Event>> cfEvents = this.firehoseClient.firehose();
 
 		return cfEvents.onErrorResumeWith(t -> this.observeFirehose(retryCount + 1));
 	}

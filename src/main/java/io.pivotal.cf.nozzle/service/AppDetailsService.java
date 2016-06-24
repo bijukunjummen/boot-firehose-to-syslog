@@ -1,5 +1,6 @@
 package io.pivotal.cf.nozzle.service;
 
+import io.pivotal.cf.nozzle.model.AppDetail;
 import org.cloudfoundry.client.v3.applications.Application;
 import reactor.core.publisher.Mono;
 
@@ -9,5 +10,5 @@ import reactor.core.publisher.Mono;
  * @author Biju Kunjummen
  */
 public interface AppDetailsService {
-	Mono<String> getApplicationName(String applicationId);
+	Mono<AppDetail> getApplicationDetail(String applicationId);
 }

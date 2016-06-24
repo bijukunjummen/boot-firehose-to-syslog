@@ -13,21 +13,21 @@ public class AppDetailsCachingServiceTest {
 
 		AppDetailsService appDetailsService = mock(AppDetailsService.class);
 
-		when(appDetailsService.getApplicationName("testid1")).thenReturn(Mono.just("testApp1"));
-		when(appDetailsService.getApplicationName("testid2")).thenReturn(Mono.just("testApp2"));
-		when(appDetailsService.getApplicationName("testid3")).thenReturn(Mono.just("testApp3"));
+		when(appDetailsService.getApplicationDetail("testid1")).thenReturn(Mono.just("testApp1"));
+		when(appDetailsService.getApplicationDetail("testid2")).thenReturn(Mono.just("testApp2"));
+		when(appDetailsService.getApplicationDetail("testid3")).thenReturn(Mono.just("testApp3"));
 
 		AppDetailsCachingService appDetailsCachingService = new AppDetailsCachingService(appDetailsService);
 
-		assertThat(appDetailsCachingService.getApplicationName("testid1")).isEqualTo("testApp1");
-		assertThat(appDetailsCachingService.getApplicationName("testid2")).isEqualTo("testApp2");
-		assertThat(appDetailsCachingService.getApplicationName("testid3")).isEqualTo("testApp3");
+		assertThat(appDetailsCachingService.getApplicationDetail("testid1")).isEqualTo("testApp1");
+		assertThat(appDetailsCachingService.getApplicationDetail("testid2")).isEqualTo("testApp2");
+		assertThat(appDetailsCachingService.getApplicationDetail("testid3")).isEqualTo("testApp3");
 
-		when(appDetailsService.getApplicationName("testid3")).thenReturn(Mono.just("testADifferentValue"));
+		when(appDetailsService.getApplicationDetail("testid3")).thenReturn(Mono.just("testADifferentValue"));
 
-		assertThat(appDetailsService.getApplicationName("testid3").block()).isEqualTo("testADifferentValue");
+		assertThat(appDetailsService.getApplicationDetail("testid3").block()).isEqualTo("testADifferentValue");
 
 		//should retrieve the cached value..
-		assertThat(appDetailsCachingService.getApplicationName("testid3")).isEqualTo("testApp3");
+		assertThat(appDetailsCachingService.getApplicationDetail("testid3")).isEqualTo("testApp3");
 	}
 }
