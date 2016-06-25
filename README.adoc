@@ -1,5 +1,5 @@
 This is a Cloud Foundry Firehose Nozzle written using https://github.com/cloudfoundry/cf-java-client[CF-Java-Client] and Spring Boot. This project is heavily inspired by
-https://github.com/cloudfoundry-community/firehose-to-syslog[go based firehose-to-syslog] nozzle and should be completely feature compatible with that project including being able to enhance log details with information about application name.
+https://github.com/cloudfoundry-community/firehose-to-syslog[go based firehose-to-syslog] nozzle and should be completely feature compatible with that project including being able to enhance log details with information about application name, org and space the application belongs to.
 
 == Developing Locally
 
@@ -20,7 +20,7 @@ git clone https://github.com/bijukunjummen/boot-firehose-to-syslog
 ----
 ./gradlew bootRun
 ----
-If you have a local PCF Dev available you should see logs being printed to the console at this point.
+If you have a local PCF Dev running, you should see logs being printed to the console at this point. PR's and suggestions are welcome!
 
 == Deploying the Nozzle
 
