@@ -48,12 +48,13 @@ public class FirehoseClientConfiguration {
 
 
 	@Bean
+	//Custom implementation - defaults to this.
 	public NettyDopplerClient nettyDopplerClient(NettyFirehose nettyFirehose) {
 		return new NettyDopplerClient(nettyFirehose);
 	}
 
 	@Bean
-	//This is not working cleanly!
+	//Native cf-Java-client implementation - breaks on large payloads
 	public WrappedDopplerClient cfDopplerClient(SpringCloudFoundryClient springCloudFoundryClient,
 													 FirehoseProperties firehoseProperties) {
 		return new WrappedDopplerClient(springCloudFoundryClient, firehoseProperties);

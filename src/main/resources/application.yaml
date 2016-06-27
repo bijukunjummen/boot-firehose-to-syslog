@@ -8,6 +8,7 @@ firehose:
 #  eventTypes: LogMessage
   textFormat: TEXT
   parallelism: 5
+  subscriptionId: boot-firehose-to-syslog
 
 #syslog:
 #  connectionType: TCP # OR UDP OR DEBUG
