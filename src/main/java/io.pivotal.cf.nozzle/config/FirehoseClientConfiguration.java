@@ -7,17 +7,15 @@ import io.pivotal.cf.nozzle.doppler.WrappedDopplerClient;
 import io.pivotal.cf.nozzle.mapper.EnvelopeSerializationMapper;
 import io.pivotal.cf.nozzle.mapper.JsonSerializer;
 import io.pivotal.cf.nozzle.mapper.TextSerializationMapper;
-import io.pivotal.cf.nozzle.props.CfProperties;
-import io.pivotal.cf.nozzle.props.FirehoseProperties;
 import io.pivotal.cf.nozzle.netty.FirehoseBuilder;
 import io.pivotal.cf.nozzle.netty.NettyFirehose;
+import io.pivotal.cf.nozzle.props.CfProperties;
+import io.pivotal.cf.nozzle.props.FirehoseProperties;
 import io.pivotal.cf.nozzle.service.FirehoseObserver;
-import org.cloudfoundry.doppler.DopplerClient;
 import org.cloudfoundry.spring.client.SpringCloudFoundryClient;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.access.method.P;
 import reactor.core.util.Exceptions;
 
 import java.net.URI;
@@ -41,10 +39,9 @@ public class FirehoseClientConfiguration {
 	}
 
 	@Bean
-	public FirehoseObserver firehoseObserver(FirehoseClient nettyDopplerClient, FirehoseProperties firehoseProperties) {
-		return new FirehoseObserver(nettyDopplerClient, firehoseProperties);
+	public FirehoseObserver firehoseObserver(FirehoseClient nettyDopplerClient) {
+		return new FirehoseObserver(nettyDopplerClient);
 	}
-
 
 
 	@Bean

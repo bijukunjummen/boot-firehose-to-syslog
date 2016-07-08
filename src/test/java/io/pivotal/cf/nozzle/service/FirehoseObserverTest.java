@@ -2,16 +2,14 @@ package io.pivotal.cf.nozzle.service;
 
 import io.pivotal.cf.nozzle.doppler.Envelope;
 import io.pivotal.cf.nozzle.doppler.NettyDopplerClient;
-import io.pivotal.cf.nozzle.props.FirehoseProperties;
-import org.cloudfoundry.doppler.Event;
-import org.cloudfoundry.doppler.FirehoseRequest;
 import org.junit.Test;
 import reactor.core.publisher.Flux;
 import reactor.core.test.TestSubscriber;
 
 import java.util.concurrent.CountDownLatch;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class FirehoseObserverTest {
 
@@ -20,8 +18,8 @@ public class FirehoseObserverTest {
 		NettyDopplerClient nettyDopplerClient = mock(NettyDopplerClient.class);
 		when(nettyDopplerClient.firehose())
 				.thenReturn(Flux.just(sampleEnvelope()));
-		FirehoseObserver firehoseObserver = new FirehoseObserver(nettyDopplerClient, new FirehoseProperties());
-		Flux<Envelope<? extends Event>> publisher = firehoseObserver.observeFirehose(0);
+		FirehoseObserver firehoseObserver = new FirehoseObserver(nettyDopplerClient);
+		Flux<Envelope> publisher = firehoseObserver.observeFirehose(0);
 		TestSubscriber.subscribe(publisher).await().assertValues(sampleEnvelope());
 	}
 
@@ -31,10 +29,10 @@ public class FirehoseObserverTest {
 		NettyDopplerClient nettyDopplerClient = mock(NettyDopplerClient.class);
 		when(nettyDopplerClient.firehose())
 				.thenReturn(Flux.error(new RuntimeException("test")));
-		FirehoseObserver firehoseObserver = new FirehoseObserver(nettyDopplerClient, new FirehoseProperties());
-		Flux<Envelope<? extends Event>> publisher = firehoseObserver.observeFirehose(0);
+		FirehoseObserver firehoseObserver = new FirehoseObserver(nettyDopplerClient);
+		Flux<Envelope> publisher = firehoseObserver.observeFirehose(0);
 		CountDownLatch cl = new CountDownLatch(1);
-		publisher.subscribe(e -> e.getEvent(), t -> {throw new RuntimeException(t);}, () -> cl.countDown() );
+		publisher.subscribe(e -> {}, t -> {throw new RuntimeException(t);}, () -> cl.countDown() );
 		cl.await();
 	}
 
@@ -44,14 +42,14 @@ public class FirehoseObserverTest {
 		when(nettyDopplerClient.firehose())
 				.thenReturn(Flux.error(new RuntimeException("test")))
 				.thenReturn(Flux.just(sampleEnvelope()));
-		FirehoseObserver firehoseObserver = new FirehoseObserver(nettyDopplerClient, new FirehoseProperties());
-		Flux<Envelope<? extends Event>> publisher = firehoseObserver.observeFirehose(0);
+		FirehoseObserver firehoseObserver = new FirehoseObserver(nettyDopplerClient);
+		Flux<Envelope> publisher = firehoseObserver.observeFirehose(0);
 		CountDownLatch cl = new CountDownLatch(1);
-		publisher.subscribe(e -> e.getEvent(), t -> {throw new RuntimeException(t);}, () -> cl.countDown() );
+		publisher.subscribe(e -> {}, t -> {throw new RuntimeException(t);}, () -> cl.countDown() );
 		cl.await();
 	}
 
-	private Envelope<? extends Event> sampleEnvelope() {
+	private Envelope sampleEnvelope() {
 		org.cloudfoundry.dropsonde.events.CounterEvent cfCounterEvent =
 				new org.cloudfoundry.dropsonde.events.CounterEvent.Builder()
 						.name("counter")

@@ -1,6 +1,5 @@
 package io.pivotal.cf.nozzle.doppler;
 
-import org.cloudfoundry.doppler.Event;
 import reactor.core.publisher.Flux;
 
 /**
@@ -8,5 +7,5 @@ import reactor.core.publisher.Flux;
  * @author Biju Kunjummen
  */
 public interface FirehoseClient {
-	Flux<Envelope<? extends Event>> firehose();
+	Flux<Envelope> firehose();
 }

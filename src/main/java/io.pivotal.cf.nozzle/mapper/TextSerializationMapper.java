@@ -3,8 +3,6 @@ package io.pivotal.cf.nozzle.mapper;
 import io.pivotal.cf.nozzle.doppler.Envelope;
 import io.pivotal.cf.nozzle.doppler.EventType;
 import io.pivotal.cf.nozzle.doppler.WrappedEnvelope;
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.cloudfoundry.doppler.*;
 import org.cloudfoundry.doppler.Error;
 import reactor.core.tuple.Tuple;
@@ -40,35 +38,35 @@ public class TextSerializationMapper implements EnvelopeSerializationMapper {
 				}
 			}
 
-			mappingList.addAll(addEventMappingDetails(envelope.getEnvelope().getEventType(), envelope.getEnvelope().getEvent()));
+			mappingList.addAll(addEventMappingDetails(envelope.getEnvelope().getEventType(), envelope.getEnvelope()));
 			return mappingList;
 		});
 
 	}
 
 	@Override
-	public String serialize(WrappedEnvelope<? extends Event> envelope) {
+	public String serialize(WrappedEnvelope envelope) {
 		return this.textSerializer.serialize(envelope);
 	}
 
-	private List<Supplier<Tuple2<String, String>>> addEventMappingDetails(EventType eventType, Event event) {
+	private List<Supplier<Tuple2<String, String>>> addEventMappingDetails(EventType eventType, Envelope envelope) {
 		switch (eventType) {
 			case HttpStart:
-				return addEventMappingDetailForEvent((HttpStart) event);
+				return addEventMappingDetailForEvent(envelope.getHttpStart());
 			case HttpStop:
-				return addEventMappingDetailForEvent((HttpStop) event);
+				return addEventMappingDetailForEvent(envelope.getHttpStop());
 			case HttpStartStop:
-				return addEventMappingDetailForEvent((HttpStartStop) event);
+				return addEventMappingDetailForEvent(envelope.getHttpStartStop());
 			case LogMessage:
-				return addEventMappingDetailForEvent((LogMessage) event);
+				return addEventMappingDetailForEvent(envelope.getLogMessage());
 			case ValueMetric:
-				return addEventMappingDetailForEvent((ValueMetric) event);
+				return addEventMappingDetailForEvent(envelope.getValueMetric());
 			case CounterEvent:
-				return addEventMappingDetailForEvent((CounterEvent) event);
+				return addEventMappingDetailForEvent(envelope.getCounterEvent());
 			case Error:
-				return addEventMappingDetailForEvent((Error) event);
+				return addEventMappingDetailForEvent(envelope.getError());
 			case ContainerMetric:
-				return addEventMappingDetailForEvent((ContainerMetric) event);
+				return addEventMappingDetailForEvent(envelope.getContainerMetric());
 			default:
 				return null;
 		}

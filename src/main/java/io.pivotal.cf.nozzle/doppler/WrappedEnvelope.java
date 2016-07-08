@@ -1,27 +1,26 @@
 package io.pivotal.cf.nozzle.doppler;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
-import org.cloudfoundry.doppler.Event;
 
 import java.util.Map;
 
-public class WrappedEnvelope<T extends Event> {
+public class WrappedEnvelope {
 
 	@JsonUnwrapped
-	private final Envelope<T> envelope;
+	private final Envelope envelope;
 	private final Map<String, String> additionalFields;
 
-	public WrappedEnvelope(Envelope<T> envelope, Map<String, String> additionalFields) {
+	public WrappedEnvelope(Envelope envelope, Map<String, String> additionalFields) {
 		this.envelope = envelope;
 		this.additionalFields = additionalFields;
 	}
 
-	public WrappedEnvelope(Envelope<T> envelope) {
+	public WrappedEnvelope(Envelope envelope) {
 		this(envelope, null);
 	}
 
 
-	public Envelope<T> getEnvelope() {
+	public Envelope getEnvelope() {
 		return envelope;
 	}
 

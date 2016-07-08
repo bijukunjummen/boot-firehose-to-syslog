@@ -1,7 +1,6 @@
 package io.pivotal.cf.nozzle.doppler;
 
 import io.pivotal.cf.nozzle.props.FirehoseProperties;
-import org.cloudfoundry.doppler.Event;
 import org.cloudfoundry.reactor.util.AbstractReactorOperations;
 import org.cloudfoundry.reactor.util.ConnectionContextSupplier;
 import reactor.core.publisher.Flux;
@@ -22,7 +21,7 @@ public class WrappedDopplerClient extends AbstractReactorOperations implements F
 		this.firehoseProperties = firehoseProperties;
 	}
 
-	public Flux<Envelope<? extends Event>> firehose() {
+	public Flux<Envelope> firehose() {
 		return doWs(builder -> builder.pathSegment("firehose", this.firehoseProperties.getSubscriptionId()), outbound -> outbound)
 				.flatMap(HttpInbound::receiveInputStream)
 				.map(WrappedDopplerClient::toEnvelope)

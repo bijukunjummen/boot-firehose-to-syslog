@@ -3,7 +3,6 @@ package io.pivotal.cf.nozzle.mapper;
 import io.pivotal.cf.nozzle.doppler.Envelope;
 import io.pivotal.cf.nozzle.doppler.EventType;
 import io.pivotal.cf.nozzle.doppler.WrappedEnvelope;
-import org.cloudfoundry.doppler.Event;
 import org.cloudfoundry.doppler.HttpStart;
 import org.cloudfoundry.doppler.Method;
 import org.cloudfoundry.doppler.PeerType;
@@ -20,7 +19,7 @@ public class TextSerializerWithApplicationNameTest {
 	@Test
 	public void serializeWithApplicationNameTest() {
 		TextSerializationMapper textSerializationMapper = new TextSerializationMapper();
-		Envelope<HttpStart> sampleEvent = sampleHttpStartEvent();
+		Envelope sampleEvent = sampleHttpStartEvent();
 		Map<String, String> additionalFieldsMap = new HashMap<>();
 		additionalFieldsMap.put("applicationName", "myapp");
 		WrappedEnvelope wrappedEnvelope = new WrappedEnvelope(sampleEvent, additionalFieldsMap);
@@ -40,21 +39,18 @@ public class TextSerializerWithApplicationNameTest {
 
 	}
 
-	private <T extends Event> Envelope<T> sampleEnvelope(T event, EventType eventType) {
-		return (Envelope<T>) Envelope.builder()
+	private Envelope.Builder sampleEnvelopeBuilder(EventType eventType) {
+		return Envelope.builder()
 				.deployment("deployment")
 				.eventType(eventType)
-				.event(event)
 				.index("index")
 				.ip("ip")
 				.job("job")
 				.origin("origin")
-				.timestamp(123L)
-				.build();
+				.timestamp(123L);
 	}
 
-
-	private Envelope<HttpStart> sampleHttpStartEvent() {
+	private Envelope sampleHttpStartEvent() {
 		HttpStart httpStart = HttpStart.builder()
 				.applicationId(UUID.fromString("00000000-0000-0000-0000-000000000000"))
 				.instanceId("instanceId")
@@ -68,6 +64,6 @@ public class TextSerializerWithApplicationNameTest {
 				.userAgent("userAgent")
 				.timestamp(123L)
 				.build();
-		return sampleEnvelope(httpStart, EventType.HttpStart);
+		return sampleEnvelopeBuilder(EventType.HttpStart).httpStart(httpStart).build();
 	}
 }

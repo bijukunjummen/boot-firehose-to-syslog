@@ -1,7 +1,6 @@
 package io.pivotal.cf.nozzle.doppler;
 
 import io.pivotal.cf.nozzle.netty.NettyFirehose;
-import org.cloudfoundry.doppler.Event;
 import reactor.core.publisher.Flux;
 
 /**
@@ -15,7 +14,7 @@ public class NettyDopplerClient implements FirehoseClient {
 		this.nettyFirehose = nettyFirehose;
 	}
 
-	public Flux<Envelope<? extends Event>> firehose() {
+	public Flux<Envelope> firehose() {
 		return nettyFirehose.open()
 				.map(Envelope::from);
 	}
