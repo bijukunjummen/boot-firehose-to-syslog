@@ -33,31 +33,34 @@ public class CfAppDetailsService implements AppDetailsService {
 
 	public Mono<AppDetail> getApplicationDetail(String applicationId) {
 
-		Flux<Tuple3<GetApplicationResponse, GetSpaceResponse, GetOrganizationResponse>> tuple3Flux =
-				this.cloudFoundryClient.applicationsV2().get(GetApplicationRequest.
-						builder()
-						.applicationId(applicationId).build())
-						.flatMap(appResponse ->
-								this.cloudFoundryClient.spaces()
-										.get(GetSpaceRequest
-												.builder()
-												.spaceId(appResponse.getEntity().getSpaceId())
-												.build()).map(spaceResp -> Tuples.of(appResponse, spaceResp)))
-						.flatMap(tup2 ->
-								this.cloudFoundryClient.organizations()
-										.get(GetOrganizationRequest.builder()
-												.organizationId(tup2.getT2().getEntity().getOrganizationId()).build())
-										.map(orgResp -> Tuples.of(tup2.getT1(), tup2.getT2(), orgResp))
-						);
+//		Flux<Tuple3<GetApplicationResponse, GetSpaceResponse, GetOrganizationResponse>> tuple3Flux =
+//				this.cloudFoundryClient.applicationsV2().get(GetApplicationRequest.
+//						builder()
+//						.applicationId(applicationId).build())
+//						.flatMap(appResponse ->
+//								this.cloudFoundryClient.spaces()
+//										.get(GetSpaceRequest
+//												.builder()
+//												.spaceId(appResponse.getEntity().getSpaceId())
+//												.build()).map(spaceResp -> Tuples.of(appResponse, spaceResp)))
+//						.flatMap(tup2 ->
+//								this.cloudFoundryClient.organizations()
+//										.get(GetOrganizationRequest.builder()
+//												.organizationId(tup2.getT2().getEntity().getOrganizationId()).build())
+//										.map(orgResp -> Tuples.of(tup2.getT1(), tup2.getT2(), orgResp))
+//						);
+//
+//		return tuple3Flux
+//				.single()
+//				.map(tup3 -> {
+//					String appName = tup3.getT1().getEntity().getName();
+//					String spaceName = tup3.getT2().getEntity().getName();
+//					String orgName = tup3.getT3().getEntity().getName();
+//					return new AppDetail(appName, orgName, spaceName);
+//				})
+//				.otherwiseReturn(new AppDetail("", "", ""));
 
-		return tuple3Flux
-				.single()
-				.map(tup3 -> {
-					String appName = tup3.getT1().getEntity().getName();
-					String spaceName = tup3.getT2().getEntity().getName();
-					String orgName = tup3.getT3().getEntity().getName();
-					return new AppDetail(appName, orgName, spaceName);
-				})
-				.otherwiseReturn(new AppDetail("", "", ""));
+		//Disabling app detail temporarily - failing at runtime, reason not known
+		return Mono.just(new AppDetail("", "", ""));
 	}
 }
