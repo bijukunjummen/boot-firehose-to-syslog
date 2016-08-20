@@ -2,7 +2,7 @@ package io.pivotal.cf.nozzle.mapper;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
-import reactor.core.tuple.Tuple2;
+import reactor.util.function.Tuple2;
 
 import java.util.HashMap;
 import java.util.List;

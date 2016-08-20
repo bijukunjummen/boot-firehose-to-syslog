@@ -1,6 +1,6 @@
 package io.pivotal.cf.nozzle.props;
 
-import io.pivotal.cf.nozzle.doppler.EventType;
+import org.cloudfoundry.doppler.EventType;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.List;

@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.core.tuple.Tuple;
-import reactor.core.tuple.Tuple3;
+import reactor.util.function.Tuple3;
+import reactor.util.function.Tuples;
 
 /**
  * Responsible for retrieving the application details given the application id
@@ -33,7 +33,6 @@ public class CfAppDetailsService implements AppDetailsService {
 
 	public Mono<AppDetail> getApplicationDetail(String applicationId) {
 
-//		Mono<GetApplicationResponse> responseMono =
 		Flux<Tuple3<GetApplicationResponse, GetSpaceResponse, GetOrganizationResponse>> tuple3Flux =
 				this.cloudFoundryClient.applicationsV2().get(GetApplicationRequest.
 						builder()
@@ -43,12 +42,12 @@ public class CfAppDetailsService implements AppDetailsService {
 										.get(GetSpaceRequest
 												.builder()
 												.spaceId(appResponse.getEntity().getSpaceId())
-												.build()).map(spaceResp -> Tuple.of(appResponse, spaceResp)))
+												.build()).map(spaceResp -> Tuples.of(appResponse, spaceResp)))
 						.flatMap(tup2 ->
 								this.cloudFoundryClient.organizations()
 										.get(GetOrganizationRequest.builder()
 												.organizationId(tup2.getT2().getEntity().getOrganizationId()).build())
-										.map(orgResp -> Tuple.of(tup2.t1, tup2.t2, orgResp))
+										.map(orgResp -> Tuples.of(tup2.getT1(), tup2.getT2(), orgResp))
 						);
 
 		return tuple3Flux

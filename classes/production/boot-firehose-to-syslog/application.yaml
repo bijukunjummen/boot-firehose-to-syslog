@@ -5,7 +5,7 @@ cf:
   skipSslValidation: true
 
 firehose:
-  eventTypes: LOG_MESSAGE
+#  eventTypes: LogMessage
   textFormat: TEXT
   parallelism: 5
   subscriptionId: boot-firehose-to-syslog
@@ -15,14 +15,15 @@ firehose:
 #  server: splunkServer
 #  port: 9997
 
-#    CONTAINER_METRIC,
-#    COUNTER_EVENT,
-#    ERROR,
-#    HTTP_START,
-#    HTTP_START_STOP,
-#    HTTP_STOP,
-#    LOG_MESSAGE,
-#    VALUE_METRIC
+
+#    HttpStart,
+#    HttpStop,
+#    HttpStartStop,
+#    LogMessage,
+#    ValueMetric,
+#    CounterEvent,
+#    Error,
+#    ContainerMetric
 
 logging:
   level:

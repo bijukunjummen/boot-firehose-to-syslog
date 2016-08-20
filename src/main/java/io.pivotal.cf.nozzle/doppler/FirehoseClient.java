@@ -1,5 +1,7 @@
 package io.pivotal.cf.nozzle.doppler;
 
+
+import org.cloudfoundry.doppler.Envelope;
 import reactor.core.publisher.Flux;
 
 /**

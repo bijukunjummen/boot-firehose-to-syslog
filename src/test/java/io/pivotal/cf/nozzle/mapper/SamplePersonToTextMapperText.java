@@ -1,8 +1,8 @@
 package io.pivotal.cf.nozzle.mapper;
 
 import org.junit.Test;
-import reactor.core.tuple.Tuple;
-import reactor.core.tuple.Tuple2;
+import reactor.util.function.Tuple2;
+import reactor.util.function.Tuples;
 
 import java.util.Arrays;
 import java.util.function.Supplier;
@@ -18,8 +18,8 @@ public class SamplePersonToTextMapperText {
 
 		textSerializer.setFieldMapping(SamplePerson.class, (SamplePerson p) -> {
 			return Arrays.<Supplier<Tuple2<String, String>>>asList(
-					() -> Tuple.of("firstName", p.getFirstName()),
-					() -> Tuple.of("lastName", p.getLastName())
+					() -> Tuples.of("firstName", p.getFirstName()),
+					() -> Tuples.of("lastName", p.getLastName())
 			);
 		} );
 		System.out.println("textSerializer = " + textSerializer.serialize(person));

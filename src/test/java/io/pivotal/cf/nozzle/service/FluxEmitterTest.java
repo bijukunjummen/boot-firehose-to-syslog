@@ -3,7 +3,6 @@ package io.pivotal.cf.nozzle.service;
 
 import org.junit.Test;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.FluxEmitter;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;

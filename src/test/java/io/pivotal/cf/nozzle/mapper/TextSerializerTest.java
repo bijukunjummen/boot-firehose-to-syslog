@@ -1,12 +1,7 @@
 package io.pivotal.cf.nozzle.mapper;
 
-import io.pivotal.cf.nozzle.doppler.Envelope;
-import io.pivotal.cf.nozzle.doppler.EventType;
 import io.pivotal.cf.nozzle.doppler.WrappedEnvelope;
-import org.cloudfoundry.doppler.CounterEvent;
-import org.cloudfoundry.doppler.HttpStart;
-import org.cloudfoundry.doppler.Method;
-import org.cloudfoundry.doppler.PeerType;
+import org.cloudfoundry.doppler.*;
 import org.junit.Test;
 
 import java.util.UUID;
@@ -23,7 +18,7 @@ public class TextSerializerTest {
 
 		String text = textSerializationMapper.serialize(wrappedEnvelope);
 
-		assertThat(text).contains("eventType=\"CounterEvent\"");
+		assertThat(text).contains("eventType=\"COUNTER_EVENT\"");
 		assertThat(text).contains(",deployment=\"deployment\"");
 		assertThat(text).contains(",origin=\"origin\"");
 
@@ -86,7 +81,7 @@ public class TextSerializerTest {
 				.name("sampleCounter")
 				.total(12L)
 				.build();
-		return sampleEnvelopeBuilder(EventType.CounterEvent).counterEvent(counterEvent).build();
+		return sampleEnvelopeBuilder(EventType.COUNTER_EVENT).counterEvent(counterEvent).build();
 	}
 
 	private Envelope sampleHttpStartEvent() {
@@ -103,6 +98,6 @@ public class TextSerializerTest {
 				.userAgent("userAgent")
 				.timestamp(123L)
 				.build();
-		return sampleEnvelopeBuilder(EventType.HttpStart).httpStart(httpStart).build();
+		return sampleEnvelopeBuilder(EventType.HTTP_START).httpStart(httpStart).build();
 	}
 }

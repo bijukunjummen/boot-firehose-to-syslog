@@ -24,9 +24,12 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 repositories {
+
 	mavenCentral()
-	maven { url "https://repo.spring.io/snapshot" }
+	maven { url "http://repo.spring.io/release" }
 	maven { url "https://repo.spring.io/milestone" }
+	maven { url "https://repo.spring.io/snapshot" }
+	maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
 	flatDir {
 		dirs 'externalLibs'
 	}
@@ -35,10 +38,10 @@ repositories {
 
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-web')
-	compile("org.cloudfoundry:cloudfoundry-client-spring:$cfClientVersion")
+	compile("org.cloudfoundry:cloudfoundry-client-reactor:$cfClientVersion")
 	compile("org.cloudfoundry:cloudfoundry-operations:$cfClientVersion")
 	compile("io.projectreactor:reactor-core:$reactorVersion")
-	compile("io.projectreactor:reactor-netty:$reactorVersion")
+	compile("io.projectreactor.ipc:reactor-netty:$reactorNettyVersion")
 	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.4'
 	compile("com.google.guava:guava:19.0")
 	compile name: 'syslog-java-client-1.0.8'

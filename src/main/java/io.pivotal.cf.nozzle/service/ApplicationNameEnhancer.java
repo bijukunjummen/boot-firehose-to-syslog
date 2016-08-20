@@ -1,9 +1,9 @@
 package io.pivotal.cf.nozzle.service;
 
-import io.pivotal.cf.nozzle.doppler.Envelope;
-import io.pivotal.cf.nozzle.doppler.EventType;
 import io.pivotal.cf.nozzle.doppler.WrappedEnvelope;
 import io.pivotal.cf.nozzle.model.AppDetail;
+import org.cloudfoundry.doppler.Envelope;
+import org.cloudfoundry.doppler.EventType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,19 +29,19 @@ public class ApplicationNameEnhancer {
 	public WrappedEnvelope enhanceWithApplicationName(Envelope envelope) {
 		EventType eventType = envelope.getEventType();
 		switch (eventType) {
-			case HttpStart:
+			case HTTP_START:
 				return enhanceWithApplicationNameUUID(envelope, envelope.getHttpStart().getApplicationId());
-			case HttpStop:
+			case HTTP_STOP:
 				return enhanceWithApplicationNameUUID(envelope, envelope.getHttpStop().getApplicationId());
-			case HttpStartStop:
+			case HTTP_START_STOP:
 				return enhanceWithApplicationNameUUID(envelope, envelope.getHttpStartStop().getApplicationId());
-			case LogMessage:
+			case LOG_MESSAGE:
 				return enhanceWithApplicationName(envelope, envelope.getLogMessage().getApplicationId());
-			case ContainerMetric:
+			case CONTAINER_METRIC:
 				return enhanceWithApplicationName(envelope, envelope.getContainerMetric().getApplicationId());
-			case ValueMetric:
-			case CounterEvent:
-			case Error:
+			case VALUE_METRIC:
+			case COUNTER_EVENT:
+			case ERROR:
 			default:
 				return enhanceWithApplicationName(envelope, null);
 		}

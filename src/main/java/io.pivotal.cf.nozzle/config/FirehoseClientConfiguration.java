@@ -2,24 +2,24 @@ package io.pivotal.cf.nozzle.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.pivotal.cf.nozzle.doppler.FirehoseClient;
-import io.pivotal.cf.nozzle.doppler.NettyDopplerClient;
 import io.pivotal.cf.nozzle.doppler.WrappedDopplerClient;
 import io.pivotal.cf.nozzle.mapper.EnvelopeSerializationMapper;
 import io.pivotal.cf.nozzle.mapper.JsonSerializer;
 import io.pivotal.cf.nozzle.mapper.TextSerializationMapper;
-import io.pivotal.cf.nozzle.netty.FirehoseBuilder;
-import io.pivotal.cf.nozzle.netty.NettyFirehose;
 import io.pivotal.cf.nozzle.props.CfProperties;
 import io.pivotal.cf.nozzle.props.FirehoseProperties;
 import io.pivotal.cf.nozzle.service.FirehoseObserver;
-import org.cloudfoundry.spring.client.SpringCloudFoundryClient;
+import org.cloudfoundry.doppler.DopplerClient;
+import org.cloudfoundry.reactor.ConnectionContext;
+import org.cloudfoundry.reactor.DefaultConnectionContext;
+import org.cloudfoundry.reactor.TokenProvider;
+import org.cloudfoundry.reactor.client.ReactorCloudFoundryClient;
+import org.cloudfoundry.reactor.doppler.ReactorDopplerClient;
+import org.cloudfoundry.reactor.tokenprovider.PasswordGrantTokenProvider;
+import org.cloudfoundry.reactor.uaa.ReactorUaaClient;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import reactor.core.util.Exceptions;
-
-import java.net.URI;
-import java.net.URISyntaxException;
 
 /**
  * Responsible for all bean definitions to set up a Firehose client
@@ -29,64 +29,55 @@ import java.net.URISyntaxException;
 public class FirehoseClientConfiguration {
 
 	@Bean
-	public SpringCloudFoundryClient cloudFoundryClient(CfProperties cfProps) {
-		return SpringCloudFoundryClient.builder()
-				.host(cfProps.getHost())
-				.username(cfProps.getUser())
-				.password(cfProps.getPassword())
-				.skipSslValidation(cfProps.isSkipSslValidation())
+	public DefaultConnectionContext connectionContext(CfProperties cfProps) {
+		return DefaultConnectionContext.builder()
+				.apiHost(cfProps.getHost())
+				.skipSslValidation(true)
 				.build();
 	}
 
 	@Bean
-	public FirehoseObserver firehoseObserver(FirehoseClient nettyDopplerClient) {
-		return new FirehoseObserver(nettyDopplerClient);
-	}
-
-
-	@Bean
-	//Custom implementation - defaults to this.
-	public NettyDopplerClient nettyDopplerClient(NettyFirehose nettyFirehose) {
-		return new NettyDopplerClient(nettyFirehose);
+	public PasswordGrantTokenProvider tokenProvider(CfProperties cfProps) {
+		return PasswordGrantTokenProvider.builder()
+				.username(cfProps.getUser())
+				.password(cfProps.getPassword())
+				.build();
 	}
 
 	@Bean
-	//Native cf-Java-client implementation - breaks on large payloads
-	public WrappedDopplerClient cfDopplerClient(SpringCloudFoundryClient springCloudFoundryClient,
-													 FirehoseProperties firehoseProperties) {
-		return new WrappedDopplerClient(springCloudFoundryClient, firehoseProperties);
+	public ReactorCloudFoundryClient cloudFoundryClient(ConnectionContext connectionContext, TokenProvider tokenProvider) {
+		return ReactorCloudFoundryClient.builder()
+				.connectionContext(connectionContext)
+				.tokenProvider(tokenProvider)
+				.build();
 	}
 
 	@Bean
-	public NettyFirehose nettyFirehose(SpringCloudFoundryClient cloudFoundryClient,
-									   FirehoseProperties firehoseProperties, CfProperties cfProperties) {
-		String token = cloudFoundryClient.getAccessToken().block();
-		URI firehoseUrl = cloudFoundryClient.getConnectionContext()
-				.getRoot("doppler_logging_endpoint")
-				.map(str -> {
-					try {
-						return new URI(str);
-					} catch (URISyntaxException e) {
-						throw Exceptions.propagate(e);
-					}
-				}).map(uri -> {
-					try {
-						if (uri.getScheme().equalsIgnoreCase("http")) {
-							return new URI("ws", uri.getSchemeSpecificPart(), uri.getFragment());
-						} else if (uri.getScheme().equalsIgnoreCase("https")) {
-							return new URI("wss", uri.getSchemeSpecificPart(), uri.getFragment());
-						}
-					} catch (URISyntaxException e) {
-						throw Exceptions.propagate(e);
-					}
-					return uri;
-				})
-				.block();
-
-		return FirehoseBuilder.create(firehoseUrl, token)
-				.subscriptionId(firehoseProperties.getSubscriptionId())
-				.skipTlsValidation(cfProperties.isSkipSslValidation()).build();
+	public ReactorDopplerClient dopplerClient(ConnectionContext connectionContext, TokenProvider tokenProvider) {
+		return ReactorDopplerClient.builder()
+				.connectionContext(connectionContext)
+				.tokenProvider(tokenProvider)
+				.build();
 	}
+
+	@Bean
+	public ReactorUaaClient uaaClient(ConnectionContext connectionContext, TokenProvider tokenProvider) {
+		return ReactorUaaClient.builder()
+				.connectionContext(connectionContext)
+				.tokenProvider(tokenProvider)
+				.build();
+	}
+
+	@Bean
+	public WrappedDopplerClient wrappedDopplerClient(DopplerClient dopplerClient, FirehoseProperties firehoseProperties) {
+		return new WrappedDopplerClient(dopplerClient, firehoseProperties);
+	}
+
+	@Bean
+	public FirehoseObserver firehoseObserver(FirehoseClient wrappedDopplerClient) {
+		return new FirehoseObserver(wrappedDopplerClient);
+	}
+
 
 	@Bean
 	public EnvelopeSerializationMapper serializationMapper(

@@ -19,8 +19,8 @@ import java.time.temporal.ChronoUnit;
 @Service
 public class AppDetailsCachingService {
 
-	private AppDetailsService delegatedService;
-	private LoadingCache<String, AppDetail> applicationNameCache;
+	private final AppDetailsService delegatedService;
+	private final LoadingCache<String, AppDetail> applicationNameCache;
 
 	private final Integer MAX_CACHE_SIZE = 2000;
 	private final Integer DEFAULT_TIMEOUT = 2000;
@@ -33,9 +33,10 @@ public class AppDetailsCachingService {
 				.build(
 						new CacheLoader<String, AppDetail>() {
 							public AppDetail load(String applicationId) {
-								return AppDetailsCachingService.this.delegatedService
+								AppDetail retrievedAppDetail = AppDetailsCachingService.this.delegatedService
 										.getApplicationDetail(applicationId)
 										.block(Duration.of(DEFAULT_TIMEOUT, ChronoUnit.MILLIS));
+								return retrievedAppDetail;
 							}
 						});
 	}

@@ -1,11 +1,7 @@
 package io.pivotal.cf.nozzle.mapper;
 
-import io.pivotal.cf.nozzle.doppler.Envelope;
-import io.pivotal.cf.nozzle.doppler.EventType;
 import io.pivotal.cf.nozzle.doppler.WrappedEnvelope;
-import org.cloudfoundry.doppler.HttpStart;
-import org.cloudfoundry.doppler.Method;
-import org.cloudfoundry.doppler.PeerType;
+import org.cloudfoundry.doppler.*;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -26,7 +22,7 @@ public class TextSerializerWithApplicationNameTest {
 
 		String text = textSerializationMapper.serialize(wrappedEnvelope);
 
-		assertThat(text).contains("eventType=\"HttpStart\"");
+		assertThat(text).contains("eventType=\"HTTP_START\"");
 		assertThat(text).contains(",deployment=\"deployment\"");
 		assertThat(text).contains(",origin=\"origin\"");
 
@@ -64,6 +60,6 @@ public class TextSerializerWithApplicationNameTest {
 				.userAgent("userAgent")
 				.timestamp(123L)
 				.build();
-		return sampleEnvelopeBuilder(EventType.HttpStart).httpStart(httpStart).build();
+		return sampleEnvelopeBuilder(EventType.HTTP_START).httpStart(httpStart).build();
 	}
 }

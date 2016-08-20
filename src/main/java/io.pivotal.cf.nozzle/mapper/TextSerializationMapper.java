@@ -1,12 +1,10 @@
 package io.pivotal.cf.nozzle.mapper;
 
-import io.pivotal.cf.nozzle.doppler.Envelope;
-import io.pivotal.cf.nozzle.doppler.EventType;
 import io.pivotal.cf.nozzle.doppler.WrappedEnvelope;
 import org.cloudfoundry.doppler.*;
 import org.cloudfoundry.doppler.Error;
-import reactor.core.tuple.Tuple;
-import reactor.core.tuple.Tuple2;
+import reactor.util.function.Tuple2;
+import reactor.util.function.Tuples;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -21,20 +19,20 @@ public class TextSerializationMapper implements EnvelopeSerializationMapper {
 			List<Supplier<Tuple2<String, String>>> mappingList = new ArrayList<>();
 
 			mappingList.addAll(Arrays.asList(
-					() -> Tuple.of("eventType", Objects.toString(envelope.getEnvelope().getEventType())),
-					() -> Tuple.of("deployment", envelope.getEnvelope().getDeployment()),
-					() -> Tuple.of("origin", envelope.getEnvelope().getOrigin()),
-					() -> Tuple.of("timestamp", Objects.toString(envelope.getEnvelope().getTimestamp())),
-					() -> Tuple.of("job", envelope.getEnvelope().getJob()),
-					() -> Tuple.of("index", envelope.getEnvelope().getIndex()),
-					() -> Tuple.of("ip", envelope.getEnvelope().getIp())
+					() -> Tuples.of("eventType", Objects.toString(envelope.getEnvelope().getEventType())),
+					() -> Tuples.of("deployment", envelope.getEnvelope().getDeployment()),
+					() -> Tuples.of("origin", envelope.getEnvelope().getOrigin()),
+					() -> Tuples.of("timestamp", Objects.toString(envelope.getEnvelope().getTimestamp())),
+					() -> Tuples.of("job", envelope.getEnvelope().getJob()),
+					() -> Tuples.of("index", envelope.getEnvelope().getIndex()),
+					() -> Tuples.of("ip", envelope.getEnvelope().getIp())
 			));
 
 			Map<String, String> additionalFields = envelope.getAdditionalFields();
 			if (additionalFields != null) {
 
 				for (Map.Entry<String, String> entry: additionalFields.entrySet()) {
-					mappingList.add(() -> Tuple.of(entry.getKey(), entry.getValue()));
+					mappingList.add(() -> Tuples.of(entry.getKey(), entry.getValue()));
 				}
 			}
 
@@ -51,21 +49,21 @@ public class TextSerializationMapper implements EnvelopeSerializationMapper {
 
 	private List<Supplier<Tuple2<String, String>>> addEventMappingDetails(EventType eventType, Envelope envelope) {
 		switch (eventType) {
-			case HttpStart:
+			case HTTP_START:
 				return addEventMappingDetailForEvent(envelope.getHttpStart());
-			case HttpStop:
+			case HTTP_STOP:
 				return addEventMappingDetailForEvent(envelope.getHttpStop());
-			case HttpStartStop:
+			case HTTP_START_STOP:
 				return addEventMappingDetailForEvent(envelope.getHttpStartStop());
-			case LogMessage:
+			case LOG_MESSAGE:
 				return addEventMappingDetailForEvent(envelope.getLogMessage());
-			case ValueMetric:
+			case VALUE_METRIC:
 				return addEventMappingDetailForEvent(envelope.getValueMetric());
-			case CounterEvent:
+			case COUNTER_EVENT:
 				return addEventMappingDetailForEvent(envelope.getCounterEvent());
-			case Error:
+			case ERROR:
 				return addEventMappingDetailForEvent(envelope.getError());
-			case ContainerMetric:
+			case CONTAINER_METRIC:
 				return addEventMappingDetailForEvent(envelope.getContainerMetric());
 			default:
 				return null;
@@ -74,85 +72,85 @@ public class TextSerializationMapper implements EnvelopeSerializationMapper {
 
 	private List<Supplier<Tuple2<String, String>>> addEventMappingDetailForEvent(HttpStart httpStart) {
 		return Arrays.asList(
-				() -> Tuple.of("HttpStart.applicationId", Objects.toString(httpStart.getApplicationId())),
-				() -> Tuple.of("HttpStart.instanceId", httpStart.getInstanceId()),
-				() -> Tuple.of("HttpStart.instanceIndex", Objects.toString(httpStart.getInstanceIndex())),
-				() -> Tuple.of("HttpStart.method", Objects.toString(httpStart.getMethod())),
-				() -> Tuple.of("HttpStart.parentRequestId", Objects.toString(httpStart.getParentRequestId())),
-				() -> Tuple.of("HttpStart.peerType", Objects.toString(httpStart.getPeerType())),
-				() -> Tuple.of("HttpStart.remoteAddress", httpStart.getRemoteAddress()),
-				() -> Tuple.of("HttpStart.requestId", Objects.toString(httpStart.getRequestId())),
-				() -> Tuple.of("HttpStart.timestamp", Objects.toString(httpStart.getTimestamp())),
-				() -> Tuple.of("HttpStart.uri", httpStart.getUri()),
-				() -> Tuple.of("HttpStart.userAgent", httpStart.getUserAgent()));
+				() -> Tuples.of("HttpStart.applicationId", Objects.toString(httpStart.getApplicationId())),
+				() -> Tuples.of("HttpStart.instanceId", httpStart.getInstanceId()),
+				() -> Tuples.of("HttpStart.instanceIndex", Objects.toString(httpStart.getInstanceIndex())),
+				() -> Tuples.of("HttpStart.method", Objects.toString(httpStart.getMethod())),
+				() -> Tuples.of("HttpStart.parentRequestId", Objects.toString(httpStart.getParentRequestId())),
+				() -> Tuples.of("HttpStart.peerType", Objects.toString(httpStart.getPeerType())),
+				() -> Tuples.of("HttpStart.remoteAddress", httpStart.getRemoteAddress()),
+				() -> Tuples.of("HttpStart.requestId", Objects.toString(httpStart.getRequestId())),
+				() -> Tuples.of("HttpStart.timestamp", Objects.toString(httpStart.getTimestamp())),
+				() -> Tuples.of("HttpStart.uri", httpStart.getUri()),
+				() -> Tuples.of("HttpStart.userAgent", httpStart.getUserAgent()));
 	}
 
 	private List<Supplier<Tuple2<String, String>>> addEventMappingDetailForEvent(HttpStop httpStop) {
 		return Arrays.asList(
-				() -> Tuple.of("HttpStop.applicationId", Objects.toString(httpStop.getApplicationId())),
-				() -> Tuple.of("HttpStop.contentLength", Objects.toString(httpStop.getContentLength())),
-				() -> Tuple.of("HttpStop.peerType", Objects.toString(httpStop.getPeerType())),
-				() -> Tuple.of("HttpStop.requestId", Objects.toString(httpStop.getRequestId())),
-				() -> Tuple.of("HttpStop.statusCode", Objects.toString(httpStop.getStatusCode())),
-				() -> Tuple.of("HttpStop.timestamp", Objects.toString(httpStop.getTimestamp())),
-				() -> Tuple.of("HttpStop.uri", httpStop.getUri()));
+				() -> Tuples.of("HttpStop.applicationId", Objects.toString(httpStop.getApplicationId())),
+				() -> Tuples.of("HttpStop.contentLength", Objects.toString(httpStop.getContentLength())),
+				() -> Tuples.of("HttpStop.peerType", Objects.toString(httpStop.getPeerType())),
+				() -> Tuples.of("HttpStop.requestId", Objects.toString(httpStop.getRequestId())),
+				() -> Tuples.of("HttpStop.statusCode", Objects.toString(httpStop.getStatusCode())),
+				() -> Tuples.of("HttpStop.timestamp", Objects.toString(httpStop.getTimestamp())),
+				() -> Tuples.of("HttpStop.uri", httpStop.getUri()));
 	}
 
 	private List<Supplier<Tuple2<String, String>>> addEventMappingDetailForEvent(HttpStartStop httpStartStop) {
 		return Arrays.asList(
-				() -> Tuple.of("HttpStartStop.applicationId", Objects.toString(httpStartStop.getApplicationId())),
-				() -> Tuple.of("HttpStartStop.contentLength", Objects.toString(httpStartStop.getContentLength())),
-				() -> Tuple.of("HttpStartStop.instanceId", httpStartStop.getInstanceId()),
-				() -> Tuple.of("HttpStartStop.instanceIndex", Objects.toString(httpStartStop.getInstanceIndex())),
-				() -> Tuple.of("HttpStartStop.method", Objects.toString(httpStartStop.getMethod())),
-				() -> Tuple.of("HttpStartStop.peerType", Objects.toString(httpStartStop.getPeerType())),
-				() -> Tuple.of("HttpStartStop.remoteAddress", httpStartStop.getRemoteAddress()),
-				() -> Tuple.of("HttpStartStop.requestId", Objects.toString(httpStartStop.getRequestId())),
-				() -> Tuple.of("HttpStartStop.startTimestamp", Objects.toString(httpStartStop.getStartTimestamp())),
-				() -> Tuple.of("HttpStartStop.stopTimestamp", Objects.toString(httpStartStop.getStopTimestamp())),
-				() -> Tuple.of("HttpStartStop.statusCode", Objects.toString(httpStartStop.getStatusCode())),
-				() -> Tuple.of("HttpStartStop.uri", httpStartStop.getUri()),
-				() -> Tuple.of("HttpStartStop.userAgent", httpStartStop.getUserAgent()));
+				() -> Tuples.of("HttpStartStop.applicationId", Objects.toString(httpStartStop.getApplicationId())),
+				() -> Tuples.of("HttpStartStop.contentLength", Objects.toString(httpStartStop.getContentLength())),
+				() -> Tuples.of("HttpStartStop.instanceId", httpStartStop.getInstanceId()),
+				() -> Tuples.of("HttpStartStop.instanceIndex", Objects.toString(httpStartStop.getInstanceIndex())),
+				() -> Tuples.of("HttpStartStop.method", Objects.toString(httpStartStop.getMethod())),
+				() -> Tuples.of("HttpStartStop.peerType", Objects.toString(httpStartStop.getPeerType())),
+				() -> Tuples.of("HttpStartStop.remoteAddress", httpStartStop.getRemoteAddress()),
+				() -> Tuples.of("HttpStartStop.requestId", Objects.toString(httpStartStop.getRequestId())),
+				() -> Tuples.of("HttpStartStop.startTimestamp", Objects.toString(httpStartStop.getStartTimestamp())),
+				() -> Tuples.of("HttpStartStop.stopTimestamp", Objects.toString(httpStartStop.getStopTimestamp())),
+				() -> Tuples.of("HttpStartStop.statusCode", Objects.toString(httpStartStop.getStatusCode())),
+				() -> Tuples.of("HttpStartStop.uri", httpStartStop.getUri()),
+				() -> Tuples.of("HttpStartStop.userAgent", httpStartStop.getUserAgent()));
 	}
 
 	private List<Supplier<Tuple2<String, String>>> addEventMappingDetailForEvent(LogMessage logMessage) {
 		return Arrays.asList(
-				() -> Tuple.of("LogMessage.applicationId", Objects.toString(logMessage.getApplicationId())),
-				() -> Tuple.of("LogMessage.messageType", Objects.toString(logMessage.getMessageType())),
-				() -> Tuple.of("LogMessage.sourceInstance", logMessage.getSourceInstance()),
-				() -> Tuple.of("LogMessage.sourceType", logMessage.getSourceType()),
-				() -> Tuple.of("LogMessage.timestamp", Objects.toString(logMessage.getTimestamp())),
-				() -> Tuple.of("LogMessage.message", Objects.toString(logMessage.getMessage())));
+				() -> Tuples.of("LogMessage.applicationId", Objects.toString(logMessage.getApplicationId())),
+				() -> Tuples.of("LogMessage.messageType", Objects.toString(logMessage.getMessageType())),
+				() -> Tuples.of("LogMessage.sourceInstance", logMessage.getSourceInstance()),
+				() -> Tuples.of("LogMessage.sourceType", logMessage.getSourceType()),
+				() -> Tuples.of("LogMessage.timestamp", Objects.toString(logMessage.getTimestamp())),
+				() -> Tuples.of("LogMessage.message", Objects.toString(logMessage.getMessage())));
 	}
 
 	private List<Supplier<Tuple2<String, String>>> addEventMappingDetailForEvent(ValueMetric valueMetric) {
 		return Arrays.asList(
-				() -> Tuple.of("ValueMetric.name", valueMetric.getName()),
-				() -> Tuple.of("ValueMetric.unit", Objects.toString(valueMetric.getUnit())),
-				() -> Tuple.of("ValueMetric.value", Objects.toString(valueMetric.value())));
+				() -> Tuples.of("ValueMetric.name", valueMetric.getName()),
+				() -> Tuples.of("ValueMetric.unit", Objects.toString(valueMetric.getUnit())),
+				() -> Tuples.of("ValueMetric.value", Objects.toString(valueMetric.value())));
 	}
 
 	private List<Supplier<Tuple2<String, String>>> addEventMappingDetailForEvent(CounterEvent counterEvent) {
 		return Arrays.asList(
-				() -> Tuple.of("CounterEvent.name", counterEvent.getName()),
-				() -> Tuple.of("CounterEvent.delta", Objects.toString(counterEvent.getDelta())),
-				() -> Tuple.of("CounterEvent.total", Objects.toString(counterEvent.getTotal())));
+				() -> Tuples.of("CounterEvent.name", counterEvent.getName()),
+				() -> Tuples.of("CounterEvent.delta", Objects.toString(counterEvent.getDelta())),
+				() -> Tuples.of("CounterEvent.total", Objects.toString(counterEvent.getTotal())));
 	}
 
 	private List<Supplier<Tuple2<String, String>>> addEventMappingDetailForEvent(Error error) {
 		return Arrays.asList(
-				() -> Tuple.of("Error.code", Objects.toString(error.getCode())),
-				() -> Tuple.of("Error.message", error.getMessage()),
-				() -> Tuple.of("Error.source", error.getSource()));
+				() -> Tuples.of("Error.code", Objects.toString(error.getCode())),
+				() -> Tuples.of("Error.message", error.getMessage()),
+				() -> Tuples.of("Error.source", error.getSource()));
 	}
 
 	private List<Supplier<Tuple2<String, String>>> addEventMappingDetailForEvent(ContainerMetric logMessage) {
 		return Arrays.asList(
-				() -> Tuple.of("ContainerMetric.applicationId", logMessage.getApplicationId()),
-				() -> Tuple.of("ContainerMetric.cpuPercentage", Objects.toString(logMessage.getCpuPercentage())),
-				() -> Tuple.of("ContainerMetric.diskBytes", Objects.toString(logMessage.getDiskBytes())),
-				() -> Tuple.of("ContainerMetric.instanceIndex", Objects.toString(logMessage.getInstanceIndex())),
-				() -> Tuple.of("ContainerMetric.memoryBytes", Objects.toString(logMessage.getMemoryBytes())));
+				() -> Tuples.of("ContainerMetric.applicationId", logMessage.getApplicationId()),
+				() -> Tuples.of("ContainerMetric.cpuPercentage", Objects.toString(logMessage.getCpuPercentage())),
+				() -> Tuples.of("ContainerMetric.diskBytes", Objects.toString(logMessage.getDiskBytes())),
+				() -> Tuples.of("ContainerMetric.instanceIndex", Objects.toString(logMessage.getInstanceIndex())),
+				() -> Tuples.of("ContainerMetric.memoryBytes", Objects.toString(logMessage.getMemoryBytes())));
 	}
 
 

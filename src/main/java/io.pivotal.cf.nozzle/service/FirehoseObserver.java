@@ -1,7 +1,7 @@
 package io.pivotal.cf.nozzle.service;
 
-import io.pivotal.cf.nozzle.doppler.Envelope;
 import io.pivotal.cf.nozzle.doppler.FirehoseClient;
+import org.cloudfoundry.doppler.Envelope;
 import reactor.core.publisher.Flux;
 
 public class FirehoseObserver {

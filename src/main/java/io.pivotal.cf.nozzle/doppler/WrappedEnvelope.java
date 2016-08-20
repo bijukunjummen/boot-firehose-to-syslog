@@ -1,6 +1,7 @@
 package io.pivotal.cf.nozzle.doppler;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import org.cloudfoundry.doppler.Envelope;
 
 import java.util.Map;
 
