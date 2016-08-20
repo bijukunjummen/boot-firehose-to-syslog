@@ -25,5 +25,8 @@ public class GetAppDetailsIntegrationTest {
 	public void testGetAppDetail() throws Exception {
 		System.out.println("appDetailsService = " +
 				this.appDetailsService.getApplicationDetail("dcda8166-9da5-4c39-8787-ebbf7d9b7693"));
+
+		System.out.println("appDetailsService = " +
+				this.appDetailsService.getApplicationDetail("dcda8166-9da5-4c39-8787-ebbf7d9b7693"));
 	}
 }

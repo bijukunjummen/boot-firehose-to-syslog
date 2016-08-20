@@ -21,6 +21,7 @@ public class ApplicationNameEnhancer {
 
 	private final AppDetailsCachingService appDetailsCachingService;
 
+
 	@Autowired
 	public ApplicationNameEnhancer(AppDetailsCachingService appDetailsCachingService) {
 		this.appDetailsCachingService = appDetailsCachingService;

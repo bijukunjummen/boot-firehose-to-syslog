@@ -40,7 +40,7 @@ cf_host: api.local.pcfdev.io
 cf_user: admin
 cf_password: admin
 cf_skip_ssl_validation: true
-firehose_event_types: LogMessage, ValueMetric, ContainerMetric
+firehose_event_types: LOG_MESSAGE, VALUE_METRIC, CONTAINER_METRIC
 firehose_text_format: TEXT
 firehose_parallelism: 5
 firehose_subscription_id: boot-firehose-to-syslog
@@ -49,7 +49,7 @@ syslog_port: 9997
 syslog_connection_type: TCP
 ----
 
-The text format can be set to TEXT or JSON, the eventTypes to HttpStart, HttpStop, HttpStartStop, LogMessage, ValueMetric,  CounterEvent,  Error, ContainerMetric
+The text format can be set to TEXT or JSON, the eventTypes to CONTAINER_METRIC, COUNTER_EVENT, ERROR, HTTP_START, HTTP_START_STOP, HTTP_STOP, LOG_MESSAGE, VALUE_METRIC
 
 Metrics can be sent over both TCP/UDP. If the connectionType is set to "DEBUG" then the logs will simply be printed to the console which is the default mode.
 
