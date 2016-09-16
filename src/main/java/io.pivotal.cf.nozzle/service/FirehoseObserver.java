@@ -14,7 +14,8 @@ public class FirehoseObserver {
 
 	public Flux<Envelope> observeFirehose(int retryCount) {
 
-		if (retryCount >= 10) {
+		//Allow 1000 retries..
+		if (retryCount >= 1000) {
 			throw new RuntimeException("Retry count exceeded, terminating!");
 		}
 		Flux<Envelope> cfEvents = this.firehoseClient.firehose();
