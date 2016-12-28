@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import io.pivotal.cf.nozzle.model.AppDetail;
 import reactor.core.publisher.Mono;
+import reactor.util.function.Tuple2;
 import reactor.util.function.Tuple3;
 import reactor.util.function.Tuples;
 
@@ -35,14 +36,17 @@ public class CfAppDetailsService implements AppDetailsService {
 		Mono<GetApplicationResponse> applicationResponseMono = this.cloudFoundryClient
 				.applicationsV2().get(GetApplicationRequest.builder().applicationId(applicationId).build());
 
-		Mono<Tuple3<GetApplicationResponse, GetSpaceResponse, GetOrganizationResponse>> tuple3Mono
-				=  applicationResponseMono
-						.then(appResponse -> this.cloudFoundryClient.spaces()
+
+
+		Mono<Tuple2<GetApplicationResponse, GetSpaceResponse>> appAndSpaceMono
+				= applicationResponseMono
+						.and(appResponse -> this.cloudFoundryClient.spaces()
 								.get(GetSpaceRequest.builder()
 										.spaceId(appResponse.getEntity().getSpaceId())
-										.build())
-								.map(spaceResp -> Tuples.of(appResponse, spaceResp)))
-						.then(tup2 -> this.cloudFoundryClient.organizations()
+										.build()));
+
+		Mono<Tuple3<GetApplicationResponse, GetSpaceResponse, GetOrganizationResponse>> t3 =
+				appAndSpaceMono.then(tup2 -> this.cloudFoundryClient.organizations()
 								.get(GetOrganizationRequest.builder()
 										.organizationId(tup2.getT2().getEntity()
 												.getOrganizationId())
@@ -50,7 +54,7 @@ public class CfAppDetailsService implements AppDetailsService {
 								.map(orgResp -> Tuples.of(tup2.getT1(), tup2.getT2(),
 										orgResp)));
 
-		return tuple3Mono
+		return t3
 				.map(tup3 -> {
 					String appName = tup3.getT1().getEntity().getName();
 					String spaceName = tup3.getT2().getEntity().getName();
