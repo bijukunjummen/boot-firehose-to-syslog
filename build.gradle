@@ -1,6 +1,6 @@
 buildscript {
 	ext {
-		springBootVersion = '1.4.1.RELEASE'
+		springBootVersion = '1.4.2.RELEASE'
 	}
 	repositories {
 		mavenCentral()
@@ -47,6 +47,7 @@ dependencies {
 	compile name: 'syslog-java-client-1.0.8'
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile('org.assertj:assertj-core')
+	testCompile("io.projectreactor.addons:reactor-test:$reactorVersion")
 }
 
 jacocoTestReport {

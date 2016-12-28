@@ -22,7 +22,7 @@ public class TextSerializerWithApplicationNameTest {
 
 		String text = textSerializationMapper.serialize(wrappedEnvelope);
 
-		assertThat(text).contains("eventType=\"HTTP_START\"");
+		assertThat(text).contains("eventType=\"HTTP_START_STOP\"");
 		assertThat(text).contains(",deployment=\"deployment\"");
 		assertThat(text).contains(",origin=\"origin\"");
 
@@ -47,19 +47,21 @@ public class TextSerializerWithApplicationNameTest {
 	}
 
 	private Envelope sampleHttpStartEvent() {
-		HttpStart httpStart = HttpStart.builder()
+		HttpStartStop httpStartStop = HttpStartStop.builder()
 				.applicationId(UUID.fromString("00000000-0000-0000-0000-000000000000"))
 				.instanceId("instanceId")
 				.instanceIndex(2)
 				.method(Method.GET)
-				.parentRequestId(UUID.fromString("00000000-0000-0000-0000-000000000000"))
 				.peerType(PeerType.CLIENT)
 				.remoteAddress("remoteAddress")
 				.requestId(UUID.fromString("00000000-0000-0000-0000-000000000000"))
 				.uri("/test")
 				.userAgent("userAgent")
-				.timestamp(123L)
+				.contentLength(1L)
+				.startTimestamp(1L)
+				.statusCode(200)
+				.stopTimestamp(2L)
 				.build();
-		return sampleEnvelopeBuilder(EventType.HTTP_START).httpStart(httpStart).build();
+		return sampleEnvelopeBuilder(EventType.HTTP_START_STOP).httpStartStop(httpStartStop).build();
 	}
 }

@@ -1,12 +1,13 @@
 package io.pivotal.cf.nozzle.mapper;
 
-import io.pivotal.cf.nozzle.doppler.WrappedEnvelope;
-import org.cloudfoundry.doppler.*;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import org.cloudfoundry.doppler.CounterEvent;
+import org.cloudfoundry.doppler.Envelope;
+import org.cloudfoundry.doppler.EventType;
 import org.junit.Test;
 
-import java.util.UUID;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import io.pivotal.cf.nozzle.doppler.WrappedEnvelope;
 
 public class TextSerializerTest {
 
@@ -41,26 +42,6 @@ public class TextSerializerTest {
 		assertThat(text).contains(",CounterEvent.total=\"12\"");
 	}
 
-	@Test
-	public void testSerializeHtpStartEvent() {
-		TextSerializationMapper textSerializationMapper = new TextSerializationMapper();
-		Envelope httpStartEnvelope = sampleHttpStartEvent();
-
-		WrappedEnvelope wrappedEnvelope = new WrappedEnvelope(httpStartEnvelope);
-
-		String text = textSerializationMapper.serialize(wrappedEnvelope);
-		assertThat(text).contains(",HttpStart.applicationId=\"00000000-0000-0000-0000-000000000000\"");
-		assertThat(text).contains(",HttpStart.instanceId=\"instanceId\"");
-		assertThat(text).contains(",HttpStart.instanceIndex=\"2\"");
-		assertThat(text).contains(",HttpStart.method=\"GET\"");
-		assertThat(text).contains(",HttpStart.parentRequestId=\"00000000-0000-0000-0000-000000000000\"");
-		assertThat(text).contains(",HttpStart.peerType=\"CLIENT\"");
-		assertThat(text).contains(",HttpStart.remoteAddress=\"remoteAddress\"");
-		assertThat(text).contains(",HttpStart.requestId=\"00000000-0000-0000-0000-000000000000\"");
-		assertThat(text).contains(",HttpStart.timestamp=\"123\"");
-		assertThat(text).contains(",HttpStart.uri=\"/test\"");
-		assertThat(text).contains(",HttpStart.userAgent=\"userAgent\"");
-	}
 
 	private Envelope.Builder sampleEnvelopeBuilder(EventType eventType) {
 		return Envelope.builder()
@@ -84,20 +65,4 @@ public class TextSerializerTest {
 		return sampleEnvelopeBuilder(EventType.COUNTER_EVENT).counterEvent(counterEvent).build();
 	}
 
-	private Envelope sampleHttpStartEvent() {
-		HttpStart httpStart = HttpStart.builder()
-				.applicationId(UUID.fromString("00000000-0000-0000-0000-000000000000"))
-				.instanceId("instanceId")
-				.instanceIndex(2)
-				.method(Method.GET)
-				.parentRequestId(UUID.fromString("00000000-0000-0000-0000-000000000000"))
-				.peerType(PeerType.CLIENT)
-				.remoteAddress("remoteAddress")
-				.requestId(UUID.fromString("00000000-0000-0000-0000-000000000000"))
-				.uri("/test")
-				.userAgent("userAgent")
-				.timestamp(123L)
-				.build();
-		return sampleEnvelopeBuilder(EventType.HTTP_START).httpStart(httpStart).build();
-	}
 }

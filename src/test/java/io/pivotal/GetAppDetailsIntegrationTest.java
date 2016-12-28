@@ -11,10 +11,11 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = CfFirehoseClientApplication.class)
+@SpringBootTest(classes = CfFirehoseClientApplication.class)
 @Category(IntegrationTest.class)
 public class GetAppDetailsIntegrationTest {
 
@@ -24,9 +25,7 @@ public class GetAppDetailsIntegrationTest {
 	@Test
 	public void testGetAppDetail() throws Exception {
 		System.out.println("appDetailsService = " +
-				this.appDetailsService.getApplicationDetail("dcda8166-9da5-4c39-8787-ebbf7d9b7693"));
+				this.appDetailsService.getApplicationDetail("1191085d-f7aa-46d4-901c-d81e293f2a5f"));
 
-		System.out.println("appDetailsService = " +
-				this.appDetailsService.getApplicationDetail("dcda8166-9da5-4c39-8787-ebbf7d9b7693"));
 	}
 }

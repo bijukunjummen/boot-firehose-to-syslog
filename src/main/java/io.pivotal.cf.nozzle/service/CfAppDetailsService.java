@@ -1,6 +1,5 @@
 package io.pivotal.cf.nozzle.service;
 
-import io.pivotal.cf.nozzle.model.AppDetail;
 import org.cloudfoundry.client.CloudFoundryClient;
 import org.cloudfoundry.client.v2.applications.GetApplicationRequest;
 import org.cloudfoundry.client.v2.applications.GetApplicationResponse;
@@ -10,6 +9,8 @@ import org.cloudfoundry.client.v2.spaces.GetSpaceRequest;
 import org.cloudfoundry.client.v2.spaces.GetSpaceResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import io.pivotal.cf.nozzle.model.AppDetail;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple3;
@@ -50,7 +51,6 @@ public class CfAppDetailsService implements AppDetailsService {
 						);
 
 		return tuple3Flux
-
 				.map(tup3 -> {
 					String appName = tup3.getT1().getEntity().getName();
 					String spaceName = tup3.getT2().getEntity().getName();

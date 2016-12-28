@@ -1,15 +1,16 @@
 package io.pivotal.cf.nozzle.service;
 
-import io.pivotal.cf.nozzle.doppler.FirehoseClient;
-import org.cloudfoundry.doppler.Envelope;
-import org.cloudfoundry.util.test.TestSubscriber;
-import org.junit.Test;
-import reactor.core.publisher.Flux;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.concurrent.CountDownLatch;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import org.cloudfoundry.doppler.Envelope;
+import org.junit.Test;
+
+import io.pivotal.cf.nozzle.doppler.FirehoseClient;
+import reactor.core.publisher.Flux;
+import reactor.test.StepVerifier;
 
 public class FirehoseObserverTest {
 
@@ -21,7 +22,8 @@ public class FirehoseObserverTest {
 		FirehoseObserver firehoseObserver = new FirehoseObserver(dopplerClient);
 		Flux<Envelope> publisher = firehoseObserver.observeFirehose(0);
 
-		publisher.subscribe(new TestSubscriber<Envelope>().expectEquals(sampleEnvelope()));
+
+		StepVerifier.create(publisher).expectNext(sampleEnvelope());
 	}
 
 	@Test(expected = RuntimeException.class)

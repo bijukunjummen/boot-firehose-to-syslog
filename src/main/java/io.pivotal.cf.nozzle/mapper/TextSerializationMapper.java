@@ -49,10 +49,6 @@ public class TextSerializationMapper implements EnvelopeSerializationMapper {
 
 	private List<Supplier<Tuple2<String, String>>> addEventMappingDetails(EventType eventType, Envelope envelope) {
 		switch (eventType) {
-			case HTTP_START:
-				return addEventMappingDetailForEvent(envelope.getHttpStart());
-			case HTTP_STOP:
-				return addEventMappingDetailForEvent(envelope.getHttpStop());
 			case HTTP_START_STOP:
 				return addEventMappingDetailForEvent(envelope.getHttpStartStop());
 			case LOG_MESSAGE:
@@ -70,31 +66,6 @@ public class TextSerializationMapper implements EnvelopeSerializationMapper {
 		}
 	}
 
-	private List<Supplier<Tuple2<String, String>>> addEventMappingDetailForEvent(HttpStart httpStart) {
-		return Arrays.asList(
-				() -> Tuples.of("HttpStart.applicationId", Objects.toString(httpStart.getApplicationId())),
-				() -> Tuples.of("HttpStart.instanceId", httpStart.getInstanceId()),
-				() -> Tuples.of("HttpStart.instanceIndex", Objects.toString(httpStart.getInstanceIndex())),
-				() -> Tuples.of("HttpStart.method", Objects.toString(httpStart.getMethod())),
-				() -> Tuples.of("HttpStart.parentRequestId", Objects.toString(httpStart.getParentRequestId())),
-				() -> Tuples.of("HttpStart.peerType", Objects.toString(httpStart.getPeerType())),
-				() -> Tuples.of("HttpStart.remoteAddress", httpStart.getRemoteAddress()),
-				() -> Tuples.of("HttpStart.requestId", Objects.toString(httpStart.getRequestId())),
-				() -> Tuples.of("HttpStart.timestamp", Objects.toString(httpStart.getTimestamp())),
-				() -> Tuples.of("HttpStart.uri", httpStart.getUri()),
-				() -> Tuples.of("HttpStart.userAgent", httpStart.getUserAgent()));
-	}
-
-	private List<Supplier<Tuple2<String, String>>> addEventMappingDetailForEvent(HttpStop httpStop) {
-		return Arrays.asList(
-				() -> Tuples.of("HttpStop.applicationId", Objects.toString(httpStop.getApplicationId())),
-				() -> Tuples.of("HttpStop.contentLength", Objects.toString(httpStop.getContentLength())),
-				() -> Tuples.of("HttpStop.peerType", Objects.toString(httpStop.getPeerType())),
-				() -> Tuples.of("HttpStop.requestId", Objects.toString(httpStop.getRequestId())),
-				() -> Tuples.of("HttpStop.statusCode", Objects.toString(httpStop.getStatusCode())),
-				() -> Tuples.of("HttpStop.timestamp", Objects.toString(httpStop.getTimestamp())),
-				() -> Tuples.of("HttpStop.uri", httpStop.getUri()));
-	}
 
 	private List<Supplier<Tuple2<String, String>>> addEventMappingDetailForEvent(HttpStartStop httpStartStop) {
 		return Arrays.asList(

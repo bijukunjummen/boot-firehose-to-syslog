@@ -30,10 +30,6 @@ public class ApplicationNameEnhancer {
 	public WrappedEnvelope enhanceWithApplicationName(Envelope envelope) {
 		EventType eventType = envelope.getEventType();
 		switch (eventType) {
-			case HTTP_START:
-				return enhanceWithApplicationNameUUID(envelope, envelope.getHttpStart().getApplicationId());
-			case HTTP_STOP:
-				return enhanceWithApplicationNameUUID(envelope, envelope.getHttpStop().getApplicationId());
 			case HTTP_START_STOP:
 				return enhanceWithApplicationNameUUID(envelope, envelope.getHttpStartStop().getApplicationId());
 			case LOG_MESSAGE:

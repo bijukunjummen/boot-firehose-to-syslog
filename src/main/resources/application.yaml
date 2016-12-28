@@ -26,4 +26,9 @@ firehose:
 
 logging:
   level:
+    root: INFO
+    io.netty: INFO
+    reactor.ipc.netty: INFO
     io.pivotal.cf.nozzle.syslog.DebuggingSyslogSender: DEBUG
+    cloudfoundry-client.response: DEBUG
+    cloudfoundry-client.request: DEBUG
