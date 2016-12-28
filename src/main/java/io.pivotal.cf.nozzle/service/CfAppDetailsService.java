@@ -38,12 +38,10 @@ public class CfAppDetailsService implements AppDetailsService {
 
 
 
-		Mono<Tuple2<GetApplicationResponse, GetSpaceResponse>> appAndSpaceMono
-				= applicationResponseMono
-						.and(appResponse -> this.cloudFoundryClient.spaces()
-								.get(GetSpaceRequest.builder()
-										.spaceId(appResponse.getEntity().getSpaceId())
-										.build()));
+		Mono<Tuple2<GetApplicationResponse, GetSpaceResponse>> appAndSpaceMono = applicationResponseMono
+				.and(appResponse -> this.cloudFoundryClient.spaces()
+						.get(GetSpaceRequest.builder()
+								.spaceId(appResponse.getEntity().getSpaceId()).build()));
 
 		Mono<Tuple3<GetApplicationResponse, GetSpaceResponse, GetOrganizationResponse>> t3 =
 				appAndSpaceMono.then(tup2 -> this.cloudFoundryClient.organizations()
