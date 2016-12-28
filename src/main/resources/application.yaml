@@ -14,15 +14,7 @@ firehose:
 #  connectionType: TCP # OR UDP OR DEBUG
 #  server: splunkServer
 #  port: 9997
-
-#    CONTAINER_METRIC,
-#    COUNTER_EVENT,
-#    ERROR,
-#    HTTP_START,
-#    HTTP_START_STOP,
-#    HTTP_STOP,
-#    LOG_MESSAGE,
-#    VALUE_METRIC
+# CONTAINER_METRIC,COUNTER_EVENT,ERROR,HTTP_START_STOP,LOG_MESSAGE,VALUE_METRIC
 
 logging:
   level:

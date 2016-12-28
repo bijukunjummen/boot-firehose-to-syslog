@@ -17,13 +17,13 @@ import java.util.UUID;
  */
 
 @Service
-public class ApplicationNameEnhancer {
+public class ApplicationDetailsEnhancer {
 
 	private final AppDetailsCachingService appDetailsCachingService;
 
 
 	@Autowired
-	public ApplicationNameEnhancer(AppDetailsCachingService appDetailsCachingService) {
+	public ApplicationDetailsEnhancer(AppDetailsCachingService appDetailsCachingService) {
 		this.appDetailsCachingService = appDetailsCachingService;
 	}
 

@@ -20,19 +20,19 @@ public class FirehoseToSyslogConnector {
 	private final SyslogSender syslogSender;
 	private final FirehoseProperties firehoseProperties;
 	private final EnvelopeSerializationMapper envelopeMapper;
-	private final ApplicationNameEnhancer applicationNameEnhancer;
+	private final ApplicationDetailsEnhancer applicationDetailsEnhancer;
 
 	@Autowired
 	public FirehoseToSyslogConnector(FirehoseObserver firehoseObserver,
 									 SyslogSender syslogSender,
 									 FirehoseProperties firehoseProperties,
 									 EnvelopeSerializationMapper envelopeMapper,
-									 ApplicationNameEnhancer applicationNameEnhancer) {
+									 ApplicationDetailsEnhancer applicationDetailsEnhancer) {
 		this.firehoseObserver = firehoseObserver;
 		this.syslogSender = syslogSender;
 		this.firehoseProperties = firehoseProperties;
 		this.envelopeMapper = envelopeMapper;
-		this.applicationNameEnhancer = applicationNameEnhancer;
+		this.applicationDetailsEnhancer = applicationDetailsEnhancer;
 	}
 
 	public void connect() {
@@ -42,7 +42,7 @@ public class FirehoseToSyslogConnector {
 
 		parallelFlux
 				.filter(envelope -> isTargetEventType(firehoseProperties, envelope.getEventType()))
-				.map(envelope -> applicationNameEnhancer.enhanceWithApplicationName(envelope))
+				.map(envelope -> applicationDetailsEnhancer.enhanceWithApplicationName(envelope))
 				.subscribe(wrappedEnvelope -> {
 					syslogSender.sendMessage(this.envelopeMapper.serialize(wrappedEnvelope));
 				});
