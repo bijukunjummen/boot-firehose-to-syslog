@@ -1,5 +1,6 @@
 package io.pivotal.cf.nozzle.service;
 
+import io.pivotal.cf.nozzle.doppler.WrappedEnvelope;
 import io.pivotal.cf.nozzle.mapper.EnvelopeSerializationMapper;
 import io.pivotal.cf.nozzle.props.FirehoseProperties;
 import io.pivotal.cf.nozzle.syslog.SyslogSender;
@@ -8,6 +9,7 @@ import org.cloudfoundry.doppler.EventType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
 /**
@@ -42,7 +44,7 @@ public class FirehoseToSyslogConnector {
 
 		parallelFlux
 				.filter(envelope -> isTargetEventType(firehoseProperties, envelope.getEventType()))
-				.map(envelope -> applicationDetailsEnhancer.enhanceWithApplicationName(envelope))
+				.flatMap(envelope -> applicationDetailsEnhancer.enhanceWithApplicationName(envelope))
 				.subscribe(wrappedEnvelope -> {
 					syslogSender.sendMessage(this.envelopeMapper.serialize(wrappedEnvelope));
 				});

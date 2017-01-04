@@ -1,17 +1,14 @@
 package io.pivotal.cf.nozzle.service;
 
 
-import java.time.Duration;
-import java.time.temporal.ChronoUnit;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 
 import io.pivotal.cf.nozzle.model.AppDetail;
+import reactor.core.publisher.Mono;
 
 /**
  * Responsible for caching the application name
@@ -22,34 +19,23 @@ import io.pivotal.cf.nozzle.model.AppDetail;
 public class AppDetailsCachingService {
 
 	private final AppDetailsService delegatedService;
-	private final LoadingCache<String, AppDetail> applicationNameCache;
+	private final Cache<String, AppDetail> applicationNameCache;
 
 	private final Integer MAX_CACHE_SIZE = 2000;
-	private final Integer DEFAULT_TIMEOUT = 2000;
-
-
 
 	@Autowired
 	public AppDetailsCachingService(AppDetailsService delegatedService) {
 		this.delegatedService = delegatedService;
 		this.applicationNameCache = CacheBuilder.newBuilder()
 				.maximumSize(MAX_CACHE_SIZE)
-				.build(
-						new CacheLoader<String, AppDetail>() {
-							public AppDetail load(String applicationId) {
-								AppDetail retrievedAppDetail = AppDetailsCachingService.this.delegatedService
-										.getApplicationDetail(applicationId)
-										.block(Duration.of(DEFAULT_TIMEOUT, ChronoUnit.MILLIS));
-								return retrievedAppDetail;
-							}
-						});
+				.build();
 	}
 
-	public AppDetail getApplicationDetail(String applicationId) {
-		try {
-			return this.applicationNameCache.get(applicationId);
-		} catch (Exception e) {
-			return new AppDetail("", "", "");
+	public Mono<AppDetail> getApplicationDetail(String applicationId) {
+		AppDetail appDetail = this.applicationNameCache.getIfPresent(applicationId);
+		if (appDetail != null) {
+			return Mono.just(appDetail);
 		}
+		return this.delegatedService.getApplicationDetail(applicationId).doOnNext(detail -> this.applicationNameCache.put(applicationId, detail));
 	}
 }

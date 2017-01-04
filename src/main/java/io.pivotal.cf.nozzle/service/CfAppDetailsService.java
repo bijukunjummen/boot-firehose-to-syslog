@@ -1,19 +1,22 @@
 package io.pivotal.cf.nozzle.service;
 
+import static org.cloudfoundry.util.tuple.TupleUtils.function;
+
 import org.cloudfoundry.client.CloudFoundryClient;
+import org.cloudfoundry.client.v2.applications.ApplicationEntity;
 import org.cloudfoundry.client.v2.applications.GetApplicationRequest;
-import org.cloudfoundry.client.v2.applications.GetApplicationResponse;
 import org.cloudfoundry.client.v2.organizations.GetOrganizationRequest;
-import org.cloudfoundry.client.v2.organizations.GetOrganizationResponse;
+import org.cloudfoundry.client.v2.organizations.OrganizationEntity;
 import org.cloudfoundry.client.v2.spaces.GetSpaceRequest;
-import org.cloudfoundry.client.v2.spaces.GetSpaceResponse;
+import org.cloudfoundry.client.v2.spaces.SpaceEntity;
+import org.cloudfoundry.util.ResourceUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import io.pivotal.cf.nozzle.model.AppDetail;
 import reactor.core.publisher.Mono;
-import reactor.util.function.Tuple2;
-import reactor.util.function.Tuple3;
 import reactor.util.function.Tuples;
 
 /**
@@ -26,6 +29,7 @@ import reactor.util.function.Tuples;
 public class CfAppDetailsService implements AppDetailsService {
 
 	private final CloudFoundryClient cloudFoundryClient;
+	private static final Logger LOGGER = LoggerFactory.getLogger(CfAppDetailsService.class);
 
 	@Autowired
 	public CfAppDetailsService(CloudFoundryClient cloudFoundryClient) {
@@ -33,32 +37,37 @@ public class CfAppDetailsService implements AppDetailsService {
 	}
 
 	public Mono<AppDetail> getApplicationDetail(String applicationId) {
-		Mono<GetApplicationResponse> applicationResponseMono = this.cloudFoundryClient
-				.applicationsV2().get(GetApplicationRequest.builder().applicationId(applicationId).build());
+		Mono<AppDetail> appDetailMono = getApplication(applicationId).then(
+				app -> getSpace(app.getSpaceId()).map(space -> Tuples.of(space, app)))
+				.then(function((space, app) -> getOrganization(space.getOrganizationId())
+						.map(org -> Tuples.of(org, space, app))))
+				.map(function((org, space, app) -> new AppDetail(app.getName(),
+						org.getName(), space.getName())))
+				.otherwise(t -> {
+					LOGGER.info(t.getMessage(), t);
+					return Mono.just(new AppDetail("", "", ""));
+				});
 
-
-
-		Mono<Tuple2<GetApplicationResponse, GetSpaceResponse>> appAndSpaceMono = applicationResponseMono
-				.and(appResponse -> this.cloudFoundryClient.spaces()
-						.get(GetSpaceRequest.builder()
-								.spaceId(appResponse.getEntity().getSpaceId()).build()));
-
-		Mono<Tuple3<GetApplicationResponse, GetSpaceResponse, GetOrganizationResponse>> t3 =
-				appAndSpaceMono.then(tup2 -> this.cloudFoundryClient.organizations()
-								.get(GetOrganizationRequest.builder()
-										.organizationId(tup2.getT2().getEntity()
-												.getOrganizationId())
-										.build())
-								.map(orgResp -> Tuples.of(tup2.getT1(), tup2.getT2(),
-										orgResp)));
-
-		return t3
-				.map(tup3 -> {
-					String appName = tup3.getT1().getEntity().getName();
-					String spaceName = tup3.getT2().getEntity().getName();
-					String orgName = tup3.getT3().getEntity().getName();
-					return new AppDetail(appName, orgName, spaceName);
-				}).otherwiseReturn(new AppDetail("", "", ""));
+		return appDetailMono;
 
 	}
+
+	Mono<ApplicationEntity> getApplication(String applicationId) {
+		return this.cloudFoundryClient.applicationsV2()
+				.get(GetApplicationRequest.builder().applicationId(applicationId).build())
+				.map(ResourceUtils::getEntity);
+	}
+
+	Mono<SpaceEntity> getSpace(String spaceid) {
+		return this.cloudFoundryClient.spaces()
+				.get(GetSpaceRequest.builder().spaceId(spaceid).build())
+				.map(ResourceUtils::getEntity);
+	}
+
+	Mono<OrganizationEntity> getOrganization(String orgId) {
+		return this.cloudFoundryClient.organizations()
+				.get(GetOrganizationRequest.builder().organizationId(orgId).build())
+				.map(ResourceUtils::getEntity);
+	}
+
 }

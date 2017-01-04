@@ -1,16 +1,17 @@
 package io.pivotal.cf.nozzle.service;
 
-import io.pivotal.cf.nozzle.doppler.WrappedEnvelope;
-import io.pivotal.cf.nozzle.model.AppDetail;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 import org.cloudfoundry.doppler.Envelope;
 import org.cloudfoundry.doppler.EventType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import io.pivotal.cf.nozzle.doppler.WrappedEnvelope;
+import io.pivotal.cf.nozzle.model.AppDetail;
+import reactor.core.publisher.Mono;
 
 /**
  * Responsible for enhancing event details with the name of the application if feasible
@@ -20,6 +21,9 @@ import java.util.UUID;
 public class ApplicationDetailsEnhancer {
 
 	private final AppDetailsCachingService appDetailsCachingService;
+//
+//	@Autowired
+//	private AppDetailsService appDetailsService;
 
 
 	@Autowired
@@ -27,7 +31,7 @@ public class ApplicationDetailsEnhancer {
 		this.appDetailsCachingService = appDetailsCachingService;
 	}
 
-	public WrappedEnvelope enhanceWithApplicationName(Envelope envelope) {
+	public Mono<WrappedEnvelope> enhanceWithApplicationName(Envelope envelope) {
 		EventType eventType = envelope.getEventType();
 		switch (eventType) {
 			case HTTP_START_STOP:
@@ -44,24 +48,24 @@ public class ApplicationDetailsEnhancer {
 		}
 	}
 
-	public WrappedEnvelope enhanceWithApplicationName(Envelope envelope, String applicationId) {
+	public Mono<WrappedEnvelope> enhanceWithApplicationName(Envelope envelope, String applicationId) {
 		if (applicationId != null) {
-			AppDetail appDetail = this.appDetailsCachingService.getApplicationDetail(Objects.toString(applicationId));
-			if (appDetail != null) {
+			Mono<AppDetail> appDetailMono = this.appDetailsCachingService.getApplicationDetail(applicationId);
+			return appDetailMono.map(appDetail -> {
 				Map<String, String> fields = new HashMap<>();
 				fields.put("applicationName", appDetail.getApplicationName());
 				fields.put("org", appDetail.getOrg());
 				fields.put("space", appDetail.getSpace());
 				return new WrappedEnvelope(envelope, fields);
-			}
+			});
 		}
-		return new WrappedEnvelope(envelope);
+		return Mono.just(new WrappedEnvelope(envelope));
 	}
 
-	public WrappedEnvelope enhanceWithApplicationNameUUID(Envelope envelope, UUID applicationId) {
+	public Mono<WrappedEnvelope> enhanceWithApplicationNameUUID(Envelope envelope, UUID applicationId) {
 		if (applicationId != null) {
 			return enhanceWithApplicationName(envelope, applicationId.toString());
 		}
-		return new WrappedEnvelope(envelope);
+		return Mono.just(new WrappedEnvelope(envelope));
 	}
 }

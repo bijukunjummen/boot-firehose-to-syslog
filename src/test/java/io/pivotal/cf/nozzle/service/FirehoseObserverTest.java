@@ -23,7 +23,7 @@ public class FirehoseObserverTest {
 		Flux<Envelope> publisher = firehoseObserver.observeFirehose(0);
 
 
-		StepVerifier.create(publisher).expectNext(sampleEnvelope());
+		StepVerifier.create(publisher).expectNext(sampleEnvelope()).expectComplete().verify();
 	}
 
 	@Test(expected = RuntimeException.class)
@@ -72,4 +72,6 @@ public class FirehoseObserverTest {
 
 		return Envelope.from(cfEnvelope);
 	}
+
+
 }
