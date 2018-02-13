@@ -10,3 +10,4 @@ bin/
 build/
 *.zip
 classes/
+out/

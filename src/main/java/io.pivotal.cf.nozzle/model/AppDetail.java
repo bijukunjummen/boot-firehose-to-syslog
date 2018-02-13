@@ -15,6 +15,7 @@ public class AppDetail implements Serializable {
 		this.org = org;
 		this.space = space;
 	}
+
 	public String getApplicationName() {
 		return applicationName;
 	}
@@ -33,8 +34,8 @@ public class AppDetail implements Serializable {
 		if (o == null || getClass() != o.getClass()) return false;
 		AppDetail appDetail = (AppDetail) o;
 		return Objects.equals(applicationName, appDetail.applicationName) &&
-				Objects.equals(org, appDetail.org) &&
-				Objects.equals(space, appDetail.space);
+			Objects.equals(org, appDetail.org) &&
+			Objects.equals(space, appDetail.space);
 	}
 
 	@Override
@@ -45,9 +46,9 @@ public class AppDetail implements Serializable {
 	@Override
 	public String toString() {
 		return "AppDetail{" +
-				"applicationName='" + applicationName + '\'' +
-				", org='" + org + '\'' +
-				", space='" + space + '\'' +
-				'}';
+			"applicationName='" + applicationName + '\'' +
+			", org='" + org + '\'' +
+			", space='" + space + '\'' +
+			'}';
 	}
 }

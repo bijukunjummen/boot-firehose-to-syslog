@@ -30,46 +30,40 @@ public class FirehoseClientConfiguration {
 
 	@Bean
 	public DefaultConnectionContext connectionContext(CfProperties cfProps) {
-		return DefaultConnectionContext.builder()
-				.apiHost(cfProps.getHost())
-				.skipSslValidation(true)
-				.build();
+		return DefaultConnectionContext.builder().apiHost(cfProps.getHost())
+			.skipSslValidation(true).build();
 	}
 
 	@Bean
 	public PasswordGrantTokenProvider tokenProvider(CfProperties cfProps) {
-		return PasswordGrantTokenProvider.builder()
-				.username(cfProps.getUser())
-				.password(cfProps.getPassword())
-				.build();
+		return PasswordGrantTokenProvider.builder().username(cfProps.getUser())
+			.password(cfProps.getPassword()).build();
 	}
 
 	@Bean
-	public ReactorCloudFoundryClient cloudFoundryClient(ConnectionContext connectionContext, TokenProvider tokenProvider) {
-		return ReactorCloudFoundryClient.builder()
-				.connectionContext(connectionContext)
-				.tokenProvider(tokenProvider)
-				.build();
+	public ReactorCloudFoundryClient cloudFoundryClient(
+		ConnectionContext connectionContext, TokenProvider tokenProvider) {
+		return ReactorCloudFoundryClient.builder().connectionContext(connectionContext)
+			.tokenProvider(tokenProvider).build();
 	}
 
 	@Bean
-	public ReactorDopplerClient dopplerClient(ConnectionContext connectionContext, TokenProvider tokenProvider) {
-		return ReactorDopplerClient.builder()
-				.connectionContext(connectionContext)
-				.tokenProvider(tokenProvider)
-				.build();
+	public ReactorDopplerClient dopplerClient(ConnectionContext connectionContext,
+											  TokenProvider tokenProvider) {
+		return ReactorDopplerClient.builder().connectionContext(connectionContext)
+			.tokenProvider(tokenProvider).build();
 	}
 
 	@Bean
-	public ReactorUaaClient uaaClient(ConnectionContext connectionContext, TokenProvider tokenProvider) {
-		return ReactorUaaClient.builder()
-				.connectionContext(connectionContext)
-				.tokenProvider(tokenProvider)
-				.build();
+	public ReactorUaaClient uaaClient(ConnectionContext connectionContext,
+									  TokenProvider tokenProvider) {
+		return ReactorUaaClient.builder().connectionContext(connectionContext)
+			.tokenProvider(tokenProvider).build();
 	}
 
 	@Bean
-	public WrappedDopplerClient wrappedDopplerClient(DopplerClient dopplerClient, FirehoseProperties firehoseProperties) {
+	public WrappedDopplerClient wrappedDopplerClient(DopplerClient dopplerClient,
+													 FirehoseProperties firehoseProperties) {
 		return new WrappedDopplerClient(dopplerClient, firehoseProperties);
 	}
 
@@ -78,10 +72,9 @@ public class FirehoseClientConfiguration {
 		return new FirehoseObserver(wrappedDopplerClient);
 	}
 
-
 	@Bean
 	public EnvelopeSerializationMapper serializationMapper(
-			FirehoseProperties firehoseProperties, ObjectMapper objectMapper) {
+		FirehoseProperties firehoseProperties, ObjectMapper objectMapper) {
 		switch (firehoseProperties.getTextFormat()) {
 			case JSON:
 				return jsonSerializer(objectMapper);
@@ -92,7 +85,6 @@ public class FirehoseClientConfiguration {
 		return textSerializationMapper();
 	}
 
-
 	private TextSerializationMapper textSerializationMapper() {
 		return new TextSerializationMapper();
 	}
@@ -102,4 +94,3 @@ public class FirehoseClientConfiguration {
 	}
 
 }
-

@@ -13,7 +13,7 @@ public class SyslogSenderTest {
 		syslogProperties.setServer("aNonExistentServer");
 		syslogProperties.setPort(123);
 		syslogProperties.setConnectionType(SyslogConnectionType.TCP);
-		SyslogSender syslogSender = new TcpSyslogSenderImpl(syslogProperties);
+		SyslogSender syslogSender = new TcpSyslogSender(syslogProperties);
 		syslogSender.sendMessage("hello");
 	}
 }

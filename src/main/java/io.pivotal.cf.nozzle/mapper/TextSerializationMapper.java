@@ -19,19 +19,19 @@ public class TextSerializationMapper implements EnvelopeSerializationMapper {
 			List<Supplier<Tuple2<String, String>>> mappingList = new ArrayList<>();
 
 			mappingList.addAll(Arrays.asList(
-					() -> Tuples.of("eventType", Objects.toString(envelope.getEnvelope().getEventType())),
-					() -> Tuples.of("deployment", envelope.getEnvelope().getDeployment()),
-					() -> Tuples.of("origin", envelope.getEnvelope().getOrigin()),
-					() -> Tuples.of("timestamp", Objects.toString(envelope.getEnvelope().getTimestamp())),
-					() -> Tuples.of("job", envelope.getEnvelope().getJob()),
-					() -> Tuples.of("index", envelope.getEnvelope().getIndex()),
-					() -> Tuples.of("ip", envelope.getEnvelope().getIp())
+				() -> Tuples.of("eventType", Objects.toString(envelope.getEnvelope().getEventType())),
+				() -> Tuples.of("deployment", envelope.getEnvelope().getDeployment()),
+				() -> Tuples.of("origin", envelope.getEnvelope().getOrigin()),
+				() -> Tuples.of("timestamp", Objects.toString(envelope.getEnvelope().getTimestamp())),
+				() -> Tuples.of("job", envelope.getEnvelope().getJob()),
+				() -> Tuples.of("index", envelope.getEnvelope().getIndex()),
+				() -> Tuples.of("ip", envelope.getEnvelope().getIp())
 			));
 
 			Map<String, String> additionalFields = envelope.getAdditionalFields();
 			if (additionalFields != null) {
 
-				for (Map.Entry<String, String> entry: additionalFields.entrySet()) {
+				for (Map.Entry<String, String> entry : additionalFields.entrySet()) {
 					mappingList.add(() -> Tuples.of(entry.getKey(), entry.getValue()));
 				}
 			}
@@ -69,59 +69,59 @@ public class TextSerializationMapper implements EnvelopeSerializationMapper {
 
 	private List<Supplier<Tuple2<String, String>>> addEventMappingDetailForEvent(HttpStartStop httpStartStop) {
 		return Arrays.asList(
-				() -> Tuples.of("HttpStartStop.applicationId", Objects.toString(httpStartStop.getApplicationId())),
-				() -> Tuples.of("HttpStartStop.contentLength", Objects.toString(httpStartStop.getContentLength())),
-				() -> Tuples.of("HttpStartStop.instanceId", httpStartStop.getInstanceId()),
-				() -> Tuples.of("HttpStartStop.instanceIndex", Objects.toString(httpStartStop.getInstanceIndex())),
-				() -> Tuples.of("HttpStartStop.method", Objects.toString(httpStartStop.getMethod())),
-				() -> Tuples.of("HttpStartStop.peerType", Objects.toString(httpStartStop.getPeerType())),
-				() -> Tuples.of("HttpStartStop.remoteAddress", httpStartStop.getRemoteAddress()),
-				() -> Tuples.of("HttpStartStop.requestId", Objects.toString(httpStartStop.getRequestId())),
-				() -> Tuples.of("HttpStartStop.startTimestamp", Objects.toString(httpStartStop.getStartTimestamp())),
-				() -> Tuples.of("HttpStartStop.stopTimestamp", Objects.toString(httpStartStop.getStopTimestamp())),
-				() -> Tuples.of("HttpStartStop.statusCode", Objects.toString(httpStartStop.getStatusCode())),
-				() -> Tuples.of("HttpStartStop.uri", httpStartStop.getUri()),
-				() -> Tuples.of("HttpStartStop.userAgent", httpStartStop.getUserAgent()));
+			() -> Tuples.of("HttpStartStop.applicationId", Objects.toString(httpStartStop.getApplicationId())),
+			() -> Tuples.of("HttpStartStop.contentLength", Objects.toString(httpStartStop.getContentLength())),
+			() -> Tuples.of("HttpStartStop.instanceId", httpStartStop.getInstanceId()),
+			() -> Tuples.of("HttpStartStop.instanceIndex", Objects.toString(httpStartStop.getInstanceIndex())),
+			() -> Tuples.of("HttpStartStop.method", Objects.toString(httpStartStop.getMethod())),
+			() -> Tuples.of("HttpStartStop.peerType", Objects.toString(httpStartStop.getPeerType())),
+			() -> Tuples.of("HttpStartStop.remoteAddress", httpStartStop.getRemoteAddress()),
+			() -> Tuples.of("HttpStartStop.requestId", Objects.toString(httpStartStop.getRequestId())),
+			() -> Tuples.of("HttpStartStop.startTimestamp", Objects.toString(httpStartStop.getStartTimestamp())),
+			() -> Tuples.of("HttpStartStop.stopTimestamp", Objects.toString(httpStartStop.getStopTimestamp())),
+			() -> Tuples.of("HttpStartStop.statusCode", Objects.toString(httpStartStop.getStatusCode())),
+			() -> Tuples.of("HttpStartStop.uri", httpStartStop.getUri()),
+			() -> Tuples.of("HttpStartStop.userAgent", httpStartStop.getUserAgent()));
 	}
 
 	private List<Supplier<Tuple2<String, String>>> addEventMappingDetailForEvent(LogMessage logMessage) {
 		return Arrays.asList(
-				() -> Tuples.of("LogMessage.applicationId", Objects.toString(logMessage.getApplicationId())),
-				() -> Tuples.of("LogMessage.messageType", Objects.toString(logMessage.getMessageType())),
-				() -> Tuples.of("LogMessage.sourceInstance", logMessage.getSourceInstance()),
-				() -> Tuples.of("LogMessage.sourceType", logMessage.getSourceType()),
-				() -> Tuples.of("LogMessage.timestamp", Objects.toString(logMessage.getTimestamp())),
-				() -> Tuples.of("LogMessage.message", Objects.toString(logMessage.getMessage())));
+			() -> Tuples.of("LogMessage.applicationId", Objects.toString(logMessage.getApplicationId())),
+			() -> Tuples.of("LogMessage.messageType", Objects.toString(logMessage.getMessageType())),
+			() -> Tuples.of("LogMessage.sourceInstance", logMessage.getSourceInstance()),
+			() -> Tuples.of("LogMessage.sourceType", logMessage.getSourceType()),
+			() -> Tuples.of("LogMessage.timestamp", Objects.toString(logMessage.getTimestamp())),
+			() -> Tuples.of("LogMessage.message", Objects.toString(logMessage.getMessage())));
 	}
 
 	private List<Supplier<Tuple2<String, String>>> addEventMappingDetailForEvent(ValueMetric valueMetric) {
 		return Arrays.asList(
-				() -> Tuples.of("ValueMetric.name", valueMetric.getName()),
-				() -> Tuples.of("ValueMetric.unit", Objects.toString(valueMetric.getUnit())),
-				() -> Tuples.of("ValueMetric.value", Objects.toString(valueMetric.value())));
+			() -> Tuples.of("ValueMetric.name", valueMetric.getName()),
+			() -> Tuples.of("ValueMetric.unit", Objects.toString(valueMetric.getUnit())),
+			() -> Tuples.of("ValueMetric.value", Objects.toString(valueMetric.value())));
 	}
 
 	private List<Supplier<Tuple2<String, String>>> addEventMappingDetailForEvent(CounterEvent counterEvent) {
 		return Arrays.asList(
-				() -> Tuples.of("CounterEvent.name", counterEvent.getName()),
-				() -> Tuples.of("CounterEvent.delta", Objects.toString(counterEvent.getDelta())),
-				() -> Tuples.of("CounterEvent.total", Objects.toString(counterEvent.getTotal())));
+			() -> Tuples.of("CounterEvent.name", counterEvent.getName()),
+			() -> Tuples.of("CounterEvent.delta", Objects.toString(counterEvent.getDelta())),
+			() -> Tuples.of("CounterEvent.total", Objects.toString(counterEvent.getTotal())));
 	}
 
 	private List<Supplier<Tuple2<String, String>>> addEventMappingDetailForEvent(Error error) {
 		return Arrays.asList(
-				() -> Tuples.of("Error.code", Objects.toString(error.getCode())),
-				() -> Tuples.of("Error.message", error.getMessage()),
-				() -> Tuples.of("Error.source", error.getSource()));
+			() -> Tuples.of("Error.code", Objects.toString(error.getCode())),
+			() -> Tuples.of("Error.message", error.getMessage()),
+			() -> Tuples.of("Error.source", error.getSource()));
 	}
 
 	private List<Supplier<Tuple2<String, String>>> addEventMappingDetailForEvent(ContainerMetric logMessage) {
 		return Arrays.asList(
-				() -> Tuples.of("ContainerMetric.applicationId", logMessage.getApplicationId()),
-				() -> Tuples.of("ContainerMetric.cpuPercentage", Objects.toString(logMessage.getCpuPercentage())),
-				() -> Tuples.of("ContainerMetric.diskBytes", Objects.toString(logMessage.getDiskBytes())),
-				() -> Tuples.of("ContainerMetric.instanceIndex", Objects.toString(logMessage.getInstanceIndex())),
-				() -> Tuples.of("ContainerMetric.memoryBytes", Objects.toString(logMessage.getMemoryBytes())));
+			() -> Tuples.of("ContainerMetric.applicationId", logMessage.getApplicationId()),
+			() -> Tuples.of("ContainerMetric.cpuPercentage", Objects.toString(logMessage.getCpuPercentage())),
+			() -> Tuples.of("ContainerMetric.diskBytes", Objects.toString(logMessage.getDiskBytes())),
+			() -> Tuples.of("ContainerMetric.instanceIndex", Objects.toString(logMessage.getInstanceIndex())),
+			() -> Tuples.of("ContainerMetric.memoryBytes", Objects.toString(logMessage.getMemoryBytes())));
 	}
 
 

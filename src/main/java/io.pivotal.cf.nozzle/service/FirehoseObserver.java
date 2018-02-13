@@ -20,6 +20,6 @@ public class FirehoseObserver {
 		}
 		Flux<Envelope> cfEvents = this.firehoseClient.firehose();
 
-		return cfEvents.onErrorResumeWith(t -> this.observeFirehose(retryCount + 1));
+		return cfEvents.onErrorResume(t -> this.observeFirehose(retryCount + 1));
 	}
 }

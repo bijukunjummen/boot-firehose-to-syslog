@@ -22,7 +22,6 @@ public class SyslogProperties {
 	}
 
 
-
 	public String getServer() {
 		return server;
 	}

@@ -1,17 +1,16 @@
 package io.pivotal.cf.nozzle.service;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
+import io.pivotal.cf.nozzle.doppler.WrappedEnvelope;
+import io.pivotal.cf.nozzle.model.AppDetail;
 import org.cloudfoundry.doppler.Envelope;
 import org.cloudfoundry.doppler.EventType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import io.pivotal.cf.nozzle.doppler.WrappedEnvelope;
-import io.pivotal.cf.nozzle.model.AppDetail;
 import reactor.core.publisher.Mono;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Responsible for enhancing event details with the name of the application if feasible

@@ -20,19 +20,19 @@ public class TextSerializer {
 
 	public <T> String serialize(T type) {
 		Class<?> clazz = type.getClass();
-		Function<T, List<Supplier<Tuple2<String, String>>>> fieldMapper = (Function<T, List<Supplier<Tuple2<String, String>>>>)fieldMappings.get(clazz);
+		Function<T, List<Supplier<Tuple2<String, String>>>> fieldMapper = (Function<T, List<Supplier<Tuple2<String, String>>>>) fieldMappings.get(clazz);
 
 		List<Supplier<Tuple2<String, String>>> fieldMappings = fieldMapper.apply(type);
 
 		StringBuilder txt = new StringBuilder();
 
 		boolean isFirst = true;
-		for (Supplier<Tuple2<String, String>> fieldMapping: fieldMappings) {
+		for (Supplier<Tuple2<String, String>> fieldMapping : fieldMappings) {
 			Tuple2<String, String> tup = fieldMapping.get();
 			String key = tup.getT1();
 			String val = tup.getT2();
 
-			if (!isFirst){
+			if (!isFirst) {
 				txt.append(",");
 			}
 
@@ -47,6 +47,6 @@ public class TextSerializer {
 
 	private String escapeAndWrap(String text) {
 		return StringUtils.wrap(
-				StringEscapeUtils.escapeJava(text), "\"");
+			StringEscapeUtils.escapeJava(text), "\"");
 	}
 }

@@ -1,13 +1,11 @@
 package io.pivotal.cf.nozzle.service;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-
 import io.pivotal.cf.nozzle.model.AppDetail;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 /**
@@ -27,8 +25,8 @@ public class AppDetailsCachingService {
 	public AppDetailsCachingService(AppDetailsService delegatedService) {
 		this.delegatedService = delegatedService;
 		this.applicationNameCache = CacheBuilder.newBuilder()
-				.maximumSize(MAX_CACHE_SIZE)
-				.build();
+			.maximumSize(MAX_CACHE_SIZE)
+			.build();
 	}
 
 	public Mono<AppDetail> getApplicationDetail(String applicationId) {

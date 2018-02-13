@@ -13,14 +13,14 @@ import java.io.IOException;
 /**
  * Responsible for sending the syslog messages over TCP
  */
-public class TcpSyslogSenderImpl implements SyslogSender {
+public class TcpSyslogSender implements SyslogSender {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SyslogSender.class);
 
 
 	private final TcpSyslogMessageSender tcpSyslogMessageSender;
 
-	public TcpSyslogSenderImpl(SyslogProperties syslogProperties) {
+	public TcpSyslogSender(SyslogProperties syslogProperties) {
 
 		this.tcpSyslogMessageSender = new TcpSyslogMessageSender();
 		tcpSyslogMessageSender.setDefaultAppName("pcf");

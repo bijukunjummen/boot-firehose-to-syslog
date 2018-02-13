@@ -18,7 +18,7 @@ public class WrappedDopplerClient implements FirehoseClient {
 
 	public Flux<Envelope> firehose() {
 		return this.dopplerClient.firehose(FirehoseRequest.builder()
-				.subscriptionId(this.firehoseProperties.getSubscriptionId()).build());
+			.subscriptionId(this.firehoseProperties.getSubscriptionId()).build());
 	}
 
 }

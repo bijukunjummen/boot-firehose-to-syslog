@@ -20,7 +20,8 @@ logging:
   level:
     root: FATAL
     io.pivotal.cf.nozzle.syslog.DebuggingSyslogSender: DEBUG
-
 spring:
   main:
-    banner-mode: off
+    banner-mode: 'off'
+
+

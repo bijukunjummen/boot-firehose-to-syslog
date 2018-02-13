@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.List;
 
-@ConfigurationProperties(prefix="firehose")
+@ConfigurationProperties(prefix = "firehose")
 public class FirehoseProperties {
 	private List<EventType> eventTypes;
 

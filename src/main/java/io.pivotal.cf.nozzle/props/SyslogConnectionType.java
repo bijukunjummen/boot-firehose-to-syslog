@@ -3,6 +3,6 @@ package io.pivotal.cf.nozzle.props;
 /**
  * Syslog connection type - TCP or UDP
  */
-public enum  SyslogConnectionType {
+public enum SyslogConnectionType {
 	TCP, UDP, DEBUG;
 }
